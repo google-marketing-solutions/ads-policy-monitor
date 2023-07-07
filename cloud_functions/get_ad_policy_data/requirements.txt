@@ -1,0 +1,11 @@
+functions-framework==3.*
+google-ads==21.2.0
+google-auth==2.21.0
+google-auth-httplib2==0.1.0
+google-auth-oauthlib==1.0.0
+google-cloud-bigquery[pandas]==3.11.3
+jsonschema==4.18.0
+pandas==2.0.3
+pandas_gbq==0.19.2
+pydantic==2.0.2
+sqlparse==0.4.4

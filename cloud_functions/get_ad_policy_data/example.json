@@ -1,0 +1,11 @@
+{
+  "bq_output_project": "my_project",
+  "bq_output_dataset": "my_dataset",
+  "bq_output_table": "KeywordsWithAccounts",
+  "developer_token": "abc-123",
+  "refresh_token": "1//abc123",
+  "client_id": "abc123.apps.googleusercontent.com",
+  "client_secret": "client_secret",
+  "login_customer_id": 1234567890,
+  "customer_id": 111122222
+}
