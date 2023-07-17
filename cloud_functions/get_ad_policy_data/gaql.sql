@@ -30,3 +30,7 @@ FROM
   ad_group_ad
 WHERE
   customer.status = 'ENABLED'
+  AND campaign.status = 'ENABLED'
+  AND campaign.primary_status != 'ENDED'
+  AND ad_group.status = 'ENABLED'
+  AND ad_group_ad.status != 'REMOVED'

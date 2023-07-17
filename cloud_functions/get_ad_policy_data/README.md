@@ -14,7 +14,7 @@ gcloud beta functions deploy get-ad-policy-data \
   --source=. \
   --entry-point=main \
   --trigger-http \
-  --memory=1024MB \
+  --memory=2048MB \
   --timeout=3600s
 ```
 
