@@ -30,7 +30,7 @@ class GoogleAdsTestCase(unittest.TestCase):
           'client_id': 'abc123.apps.googleusercontent.com',
           'client_secret': 'client_secret',
           'login_customer_id': 1234567890,
-          'customer_id': 111122222
+          'customer_ids': [111122222, 2222223333]
         })
 
     def test_load_gaql_query(self):

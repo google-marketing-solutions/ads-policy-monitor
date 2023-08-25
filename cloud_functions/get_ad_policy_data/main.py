@@ -53,7 +53,7 @@ request_schema = {
         'client_id': {'type': 'string'},
         'client_secret': {'type': 'string'},
         'login_customer_id': {'type': 'number'},
-        'customer_id': {'type': 'number'},
+        'customer_ids': {'type': 'array'},
     },
     'required': [
         'bq_output_project',
@@ -64,7 +64,7 @@ request_schema = {
         'client_id',
         'client_secret',
         'login_customer_id',
-        'customer_id',
+        'customer_ids',
     ]
 }
 
@@ -82,7 +82,7 @@ def main(request: flask.Request) -> flask.Response:
         Response object using `make_response`
         <https://flask.palletsprojects.com/en/1.1.x/api/#flask.make_response>.
     """
-    logger.info('Triggered keyword_in_account service.')
+    logger.info('Triggered PolicyMonitor service.')
     request_json = request.get_json(silent=True)
     logger.info('JSON payload: %s', request_json)
     response = {}
