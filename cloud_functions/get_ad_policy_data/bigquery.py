@@ -30,8 +30,7 @@ def write_output_dataframe(config: models.Config,
     """Output the dataframe to BigQuery."""
     logger.info('Writing output dataframe to BigQuery.')
     destination_table = f'{config.bq_output_dataset}.{config.bq_output_table}'
-    pandas_gbq.to_gbq(
-        output_df,
-        destination_table,
-        project_id=config.bq_output_project,
-        if_exists='append')
+    pandas_gbq.to_gbq(output_df,
+                      destination_table,
+                      project_id=config.bq_output_project,
+                      if_exists='append')

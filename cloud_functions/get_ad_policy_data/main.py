@@ -32,7 +32,6 @@ import bigquery
 import google_ads
 import models
 
-
 logging.basicConfig(stream=sys.stdout)
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -43,17 +42,36 @@ parser.add_argument('config_file', type=argparse.FileType('r'))
 
 # The schema of the JSON request
 request_schema = {
-    'type': 'object',
+    'type':
+        'object',
     'properties': {
-        'bq_output_project': {'type': 'string'},
-        'bq_output_dataset': {'type': 'string'},
-        'bq_output_table': {'type': 'string'},
-        'developer_token': {'type': 'string'},
-        'refresh_token': {'type': 'string'},
-        'client_id': {'type': 'string'},
-        'client_secret': {'type': 'string'},
-        'login_customer_id': {'type': 'number'},
-        'customer_ids': {'type': 'array'},
+        'bq_output_project': {
+            'type': 'string'
+        },
+        'bq_output_dataset': {
+            'type': 'string'
+        },
+        'bq_output_table': {
+            'type': 'string'
+        },
+        'developer_token': {
+            'type': 'string'
+        },
+        'refresh_token': {
+            'type': 'string'
+        },
+        'client_id': {
+            'type': 'string'
+        },
+        'client_secret': {
+            'type': 'string'
+        },
+        'login_customer_id': {
+            'type': 'number'
+        },
+        'customer_ids': {
+            'type': 'array'
+        },
     },
     'required': [
         'bq_output_project',

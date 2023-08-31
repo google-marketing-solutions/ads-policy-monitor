@@ -25,15 +25,13 @@ import sqlparse
 import models
 import utils
 
-
 logging.basicConfig(stream=sys.stdout)
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 
-def get_ad_policy_data(
-        config: models.Config,
-        client: GoogleAdsClient = None) -> pd.DataFrame:
+def get_ad_policy_data(config: models.Config,
+                       client: GoogleAdsClient = None) -> pd.DataFrame:
     """Get the ad policy data from the Google Ads account.
 
     Args:
@@ -48,9 +46,10 @@ def get_ad_policy_data(
     if client is None:
         client = get_ads_client(config)
 
-    all_policy_data = fetch_data_from_accounts_stream(client, config.customer_ids)
+    all_policy_data = fetch_data_from_accounts_stream(client,
+                                                      config.customer_ids)
     policy_dataframe = process_ads_policy_data(client, all_policy_data)
-    
+
     return policy_dataframe
 
 
@@ -59,7 +58,8 @@ def fetch_data_from_accounts_stream(client: GoogleAdsClient, customer_ids):
     ga_service = client.get_service('GoogleAdsService')
 
     for customer_id in customer_ids:
-        logger.info('Fetchind data from Google Ads for customer: ' + str(customer_id))
+        logger.info('Fetchind data from Google Ads for customer: ' +
+                    str(customer_id))
         try:
             search_request = client.get_type('SearchGoogleAdsStreamRequest')
             search_request.customer_id = str(customer_id)
@@ -76,59 +76,59 @@ def fetch_data_from_accounts_stream(client: GoogleAdsClient, customer_ids):
 
     return all_results
 
-def process_ads_policy_data(client: GoogleAdsClient, policy_data: Iterable[Any]) -> pd.DataFrame:
-  rows_to_insert = []
 
-  for row in policy_data:
-    # logger.info('Row' + str(row))
-    policy_summary = row.ad_group_ad.policy_summary
+def process_ads_policy_data(client: GoogleAdsClient,
+                            policy_data: Iterable[Any]) -> pd.DataFrame:
+    rows_to_insert = []
 
-    campaign_status = client.enums.CampaignStatusEnum(
-        row.campaign.status).name
-    campaign_primary_status = client.enums.CampaignPrimaryStatusEnum(
-        row.campaign.primary_status).name
-    ad_group_status = client.enums.AdGroupStatusEnum(
-        row.ad_group.status).name
-    ad_group_ad_status = client.enums.AdGroupAdStatusEnum(
-        row.ad_group_ad.status).name
-    policy_approval_status = client.enums.PolicyApprovalStatusEnum(
-        policy_summary.approval_status).name
-    policy_review_status = client.enums.PolicyReviewStatusEnum(
-        policy_summary.review_status).name
+    for row in policy_data:
+        # logger.info('Row' + str(row))
+        policy_summary = row.ad_group_ad.policy_summary
 
-    for entry in policy_summary.policy_topic_entries or [None]:
-        if entry is None:
-            policy_type = None
-            policy_topic = None
-        else:
-            policy_type = client.enums.PolicyTopicEntryTypeEnum(
-                entry.type_
-            ).name
-            policy_topic = entry.topic
+        campaign_status = client.enums.CampaignStatusEnum(
+            row.campaign.status).name
+        campaign_primary_status = client.enums.CampaignPrimaryStatusEnum(
+            row.campaign.primary_status).name
+        ad_group_status = client.enums.AdGroupStatusEnum(
+            row.ad_group.status).name
+        ad_group_ad_status = client.enums.AdGroupAdStatusEnum(
+            row.ad_group_ad.status).name
+        policy_approval_status = client.enums.PolicyApprovalStatusEnum(
+            policy_summary.approval_status).name
+        policy_review_status = client.enums.PolicyReviewStatusEnum(
+            policy_summary.review_status).name
 
+        for entry in policy_summary.policy_topic_entries or [None]:
+            if entry is None:
+                policy_type = None
+                policy_topic = None
+            else:
+                policy_type = client.enums.PolicyTopicEntryTypeEnum(
+                    entry.type_).name
+                policy_topic = entry.topic
 
-        row_dict = {
-            'event_date': utils.get_current_date(),
-            'customer_id': row.customer.id,
-            'customer_descriptive_name': row.customer.descriptive_name,
-            'campaign_id': row.campaign.id,
-            'campaign_name': row.campaign.name,
-            'campaign_status': campaign_status,
-            'campaign_primary_status': campaign_primary_status,
-            'ad_group_id': row.ad_group.id,
-            'ad_group_name': row.ad_group.name,
-            'ad_group_status': ad_group_status,
-            'ad_id': row.ad_group_ad.ad.id,
-            'ad_group_ad_status': ad_group_ad_status,
-            'policy_summary_approval_status': policy_approval_status,
-            'ad_policy_summary_policy_topic_entry_topic': policy_topic,
-            'ad_policy_summary_policy_topic_entry_type': policy_type,
-            'ad_policy_summary_review_status': policy_review_status,
-        }
+            row_dict = {
+                'event_date': utils.get_current_date(),
+                'customer_id': row.customer.id,
+                'customer_descriptive_name': row.customer.descriptive_name,
+                'campaign_id': row.campaign.id,
+                'campaign_name': row.campaign.name,
+                'campaign_status': campaign_status,
+                'campaign_primary_status': campaign_primary_status,
+                'ad_group_id': row.ad_group.id,
+                'ad_group_name': row.ad_group.name,
+                'ad_group_status': ad_group_status,
+                'ad_id': row.ad_group_ad.ad.id,
+                'ad_group_ad_status': ad_group_ad_status,
+                'policy_summary_approval_status': policy_approval_status,
+                'ad_policy_summary_policy_topic_entry_topic': policy_topic,
+                'ad_policy_summary_policy_topic_entry_type': policy_type,
+                'ad_policy_summary_review_status': policy_review_status,
+            }
 
-        rows_to_insert.append(row_dict)
+            rows_to_insert.append(row_dict)
 
-  return pd.DataFrame(rows_to_insert) 
+    return pd.DataFrame(rows_to_insert)
 
 
 def load_gaql_query(sql_file: str = 'gaql.sql') -> str:

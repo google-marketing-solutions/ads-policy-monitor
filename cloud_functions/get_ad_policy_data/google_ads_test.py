@@ -21,27 +21,26 @@ import models
 class GoogleAdsTestCase(unittest.TestCase):
 
     def setUp(self) -> None:
-        self.config = models.Config(**{
-          'bq_output_project': 'my_project',
-          'bq_output_dataset': 'my_dataset',
-          'bq_output_table': 'KeywordsWithAccounts',
-          'developer_token': 'abc-123',
-          'refresh_token': '1//abc123',
-          'client_id': 'abc123.apps.googleusercontent.com',
-          'client_secret': 'client_secret',
-          'login_customer_id': 1234567890,
-          'customer_ids': [111122222, 2222223333]
-        })
+        self.config = models.Config(
+            **{
+                'bq_output_project': 'my_project',
+                'bq_output_dataset': 'my_dataset',
+                'bq_output_table': 'KeywordsWithAccounts',
+                'developer_token': 'abc-123',
+                'refresh_token': '1//abc123',
+                'client_id': 'abc123.apps.googleusercontent.com',
+                'client_secret': 'client_secret',
+                'login_customer_id': 1234567890,
+                'customer_ids': [111122222, 2222223333]
+            })
 
     def test_load_gaql_query(self):
         query = google_ads.load_gaql_query('test_data/gads_test.sql')
-        expected_query = (
-            'SELECT\n'
-            '  customer.id,\n'
-            '  customer.descriptive_name\n'
-            'FROM\n'
-            '  ad_group_ad'
-        )
+        expected_query = ('SELECT\n'
+                          '  customer.id,\n'
+                          '  customer.descriptive_name\n'
+                          'FROM\n'
+                          '  ad_group_ad')
         self.assertEqual(expected_query, query)
 
     @patch('google_ads.load_gaql_query')
