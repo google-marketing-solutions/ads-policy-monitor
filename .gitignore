@@ -143,3 +143,11 @@ cython_debug/
 
 # Secret config
 secret.json
+
+# Terraform
+**/*.tfvars
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+out/

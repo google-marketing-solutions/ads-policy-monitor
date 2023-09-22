@@ -45,7 +45,7 @@ request_schema = {
     'type':
         'object',
     'properties': {
-        'bq_output_project': {
+        'project_id': {
             'type': 'string'
         },
         'bq_output_dataset': {
@@ -54,19 +54,19 @@ request_schema = {
         'bq_output_table': {
             'type': 'string'
         },
-        'developer_token': {
+        'google_ads_developer_token': {
             'type': 'string'
         },
-        'refresh_token': {
+        'oauth_refresh_token': {
             'type': 'string'
         },
-        'client_id': {
+        'google_cloud_client_id': {
             'type': 'string'
         },
-        'client_secret': {
+        'google_cloud_client_secret': {
             'type': 'string'
         },
-        'login_customer_id': {
+        'google_ads_login_customer_id': {
             'type': 'number'
         },
         'customer_ids': {
@@ -74,14 +74,14 @@ request_schema = {
         },
     },
     'required': [
-        'bq_output_project',
+        'project_id',
         'bq_output_dataset',
         'bq_output_table',
-        'developer_token',
-        'refresh_token',
-        'client_id',
-        'client_secret',
-        'login_customer_id',
+        'google_ads_developer_token',
+        'oauth_refresh_token',
+        'google_cloud_client_id',
+        'google_cloud_client_secret',
+        'google_ads_login_customer_id',
         'customer_ids',
     ]
 }

@@ -32,5 +32,5 @@ def write_output_dataframe(config: models.Config,
     destination_table = f'{config.bq_output_dataset}.{config.bq_output_table}'
     pandas_gbq.to_gbq(output_df,
                       destination_table,
-                      project_id=config.bq_output_project,
+                      project_id=config.project_id,
                       if_exists='append')

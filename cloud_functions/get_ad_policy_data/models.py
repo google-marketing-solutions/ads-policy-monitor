@@ -17,12 +17,12 @@ from pydantic import BaseModel, SecretStr
 
 
 class Config(BaseModel):
-    bq_output_project: str
+    project_id: str
     bq_output_dataset: str
     bq_output_table: str
-    developer_token: SecretStr
-    refresh_token: SecretStr
-    client_id: str
-    client_secret: SecretStr
-    login_customer_id: int
+    google_ads_developer_token: SecretStr
+    oauth_refresh_token: SecretStr
+    google_cloud_client_id: str
+    google_cloud_client_secret: SecretStr
+    google_ads_login_customer_id: int
     customer_ids: List[int]

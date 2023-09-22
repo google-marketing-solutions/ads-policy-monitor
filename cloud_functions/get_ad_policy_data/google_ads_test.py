@@ -23,14 +23,14 @@ class GoogleAdsTestCase(unittest.TestCase):
     def setUp(self) -> None:
         self.config = models.Config(
             **{
-                'bq_output_project': 'my_project',
+                'project_id': 'my_project',
                 'bq_output_dataset': 'my_dataset',
                 'bq_output_table': 'KeywordsWithAccounts',
-                'developer_token': 'abc-123',
-                'refresh_token': '1//abc123',
-                'client_id': 'abc123.apps.googleusercontent.com',
-                'client_secret': 'client_secret',
-                'login_customer_id': 1234567890,
+                'google_ads_developer_token': 'abc-123',
+                'oauth_refresh_token': '1//abc123',
+                'google_cloud_client_id': 'abc123.apps.googleusercontent.com',
+                'google_cloud_client_secret': 'google_cloud_client_secret',
+                'google_ads_login_customer_id': 1234567890,
                 'customer_ids': [111122222, 2222223333]
             })
 
