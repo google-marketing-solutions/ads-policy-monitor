@@ -6,6 +6,56 @@ reports._
 Ads Policy Monitor provides a data pipeline for pulling ad approval data from
 Google Ads, enabling you to monitor trends and spikes with ad approvals.
 
+## Deployment
+
+The code is deployed using [Terraform](https://www.terraform.io/).
+
+Open [Cloud Shell in Google Cloud](
+  https://console.cloud.google.com/cloudshelleditor?cloudshell=true).
+
+Clone the repo:
+```
+git clone https://github.com/google-marketing-solutions/ads-policy-monitor.git
+```
+
+Press the open shell editor button.
+
+Go to `Terminal` -> `New Terminal` from the menu.
+
+Set the shell to use the correct cloud project:
+
+```
+gcloud config set project [PROJECT ID]
+```
+
+Enable the APIs:
+
+```
+gcloud services enable \
+   bigquery.googleapis.com \
+   cloudbuild.googleapis.com \
+   cloudfunctions.googleapis.com \
+   cloudresourcemanager.googleapis.com \
+   googleads.googleapis.com \
+   iam.googleapis.com
+```
+
+Then navigate into the terraform directory:
+
+```
+cd ads-policy-monitor/terraform
+```
+
+In the file editor open up the `ads-policy-monitor/terraform/terraform.tfvars`,
+and update the variables with your configuration.
+
+Back in the terminal session run:
+
+```
+terraform init
+terraform apply --var-file terraform.tfvars
+```
+
 ## Code formatting
 
 The code is formatted using [yapf](https://github.com/google/yapf). After making

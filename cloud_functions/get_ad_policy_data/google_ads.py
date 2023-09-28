@@ -145,11 +145,11 @@ def get_ads_client(config: models.Config) -> GoogleAdsClient:
     """Get a Google Ads Client based on the config."""
     logger.info('Getting Google Ads client.')
     credentials = {
-        'google_ads_developer_token': config.google_ads_developer_token.get_secret_value(),
-        'oauth_refresh_token': config.oauth_refresh_token.get_secret_value(),
-        'google_cloud_client_id': config.google_cloud_client_id,
-        'google_cloud_client_secret': config.google_cloud_client_secret.get_secret_value(),
+        'developer_token': config.google_ads_developer_token.get_secret_value(),
+        'refresh_token': config.oauth_refresh_token.get_secret_value(),
+        'client_id': config.google_cloud_client_id,
+        'client_secret': config.google_cloud_client_secret.get_secret_value(),
         'use_proto_plus': True,
-        'google_ads_login_customer_id': config.google_ads_login_customer_id,
+        'login_customer_id': config.google_ads_login_customer_id,
     }
     return GoogleAdsClient.load_from_dict(credentials)

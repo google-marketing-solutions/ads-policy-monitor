@@ -32,8 +32,8 @@ variable "google_ads_developer_token" {
   sensitive   = true
 }
 
-variable "google_ads_google_ads_login_customer_id" {
-  type        = string
+variable "google_ads_login_customer_id" {
+  type        = number
   description = "The Google Ads MCC customer ID with no dashes"
 }
 
@@ -50,7 +50,7 @@ variable "bq_output_table" {
 }
 
 variable "customer_ids" {
-  type        = list
+  type        = list(number)
   description = "The list of customer IDs to be scanned for policy violations"
   default     = []
 }
