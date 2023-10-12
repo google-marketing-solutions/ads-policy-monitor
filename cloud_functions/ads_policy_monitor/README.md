@@ -1,25 +1,11 @@
-# Keyword In Account
+# Ads Policy Monitor Cloud Function
 
-A Gen2 Cloud Function to get ad policy data from Google Ads.
-
-## Deployment
-
-Install the gcloud cli and set the right config then:
-
-```
-gcloud beta functions deploy get-ad-policy-data \
-  --gen2 \
-  --runtime=python311 \
-  --region=europe-west2 \
-  --source=. \
-  --entry-point=main \
-  --trigger-http \
-  --memory=2048MB \
-  --timeout=3600s
-```
+A Gen2 Cloud Function to get various reports from Google Ads in relation to ad
+policy data.
 
 ## Running locally
 Set up the environment
+
 ```
 python3 -m venv venv
 source venv/bin/activate
@@ -50,3 +36,19 @@ your secret credentials and run:
 ```
 python main.py secret.json
 ```
+
+## Running for a subset of reports
+
+If you don't want to run all the reports, you can specify which reports to run
+by providing a `reports_to_run` variable in the payload.
+
+For example:
+
+```
+{
+    "reports_to_run": ["OCID"],
+    "project_id": "my_project",
+    ...
+}
+```
+

@@ -11,13 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Pull all ads from Google Ads with their approval info and output to Bigquery.
+"""The orchestration for Ads Policy Monitor.
 
-The gaql.sql file contains the query pulled from Google Ads. More info about
-this can be found in the docs.
-https://developers.google.com/google-ads/api/fields/v12/ad_group_ad_query_builder
+The solution is built around Google Ads API Report Fetcher (GAARF), to simplify
+extracting data from the Google Ads API via GAQL.
 
-This data is pulled and output to the specified BigQuery table.
+It pulls data from Google Ads & outputs it to BigQuery.
 """
 import argparse
 import json
@@ -38,20 +37,29 @@ logger.setLevel(logging.INFO)
 
 # For local deployment create a flag for the json config file
 parser = argparse.ArgumentParser()
-parser.add_argument('config_file', type=argparse.FileType('r'))
+parser.add_argument('payload_file', type=argparse.FileType('r'))
+
+# The default reports to run
+DEFAULT_REPORTS_TO_RUN = [
+    models.ReportType.OCID,
+    models.ReportType.AD_POLICY_DATA,
+]
 
 # The schema of the JSON request
 request_schema = {
     'type':
         'object',
     'properties': {
+        'reports_to_run': {
+            'type': 'array'
+        },
         'project_id': {
             'type': 'string'
         },
         'bq_output_dataset': {
             'type': 'string'
         },
-        'bq_output_table': {
+        'region': {
             'type': 'string'
         },
         'google_ads_developer_token': {
@@ -76,7 +84,7 @@ request_schema = {
     'required': [
         'project_id',
         'bq_output_dataset',
-        'bq_output_table',
+        'region',
         'google_ads_developer_token',
         'oauth_refresh_token',
         'google_cloud_client_id',
@@ -100,7 +108,7 @@ def main(request: flask.Request) -> flask.Response:
         Response object using `make_response`
         <https://flask.palletsprojects.com/en/1.1.x/api/#flask.make_response>.
     """
-    logger.info('Triggered PolicyMonitor service.')
+    logger.info('Triggered Ads Policy Monitor service.')
     request_json = request.get_json(silent=True)
     logger.info('JSON payload: %s', request_json)
     response = {}
@@ -114,7 +122,7 @@ def main(request: flask.Request) -> flask.Response:
                               status=400,
                               mimetype='application/json')
 
-    config = models.Config(**request_json)
+    config = models.Payload(**request_json)
     run(config)
 
     response['status'] = 'Success'
@@ -124,22 +132,28 @@ def main(request: flask.Request) -> flask.Response:
                           mimetype='application/json')
 
 
-def run(config: models.Config):
+def run(payload: models.Payload) -> None:
     """The orchestration for the function.
 
     Args:
-        config: the configuration used in this execution.
+        payload: the configuration used in this execution.
     """
-    logger.info('Running the orchestration for config:')
-    logger.info(config)
-    ads_data_df = google_ads.get_ad_policy_data(config)
-    logger.info('Found %i rows of data', len(ads_data_df))
-    bigquery.write_output_dataframe(config, ads_data_df)
+    logger.info('Running the orchestration for payload:')
+    logger.info(payload)
+
+    reports_to_run = payload.reports_to_run or DEFAULT_REPORTS_TO_RUN
+    for report in reports_to_run:
+        gaarf_report = google_ads.run_gaarf_report(payload, report)
+        if gaarf_report is None:
+            logger.warning('GAARF report is None, check configuration.')
+            return None
+        bigquery.write_gaarf_report_to_bigquery(payload, gaarf_report,
+                                                report.value.lower())
     logger.info('Done.')
 
 
 if __name__ == '__main__':
     args = parser.parse_args()
-    with args.config_file as f:
-        json_config = json.load(f)
-        run(models.Config(**json_config))
+    with args.payload_file as f:
+        json_payload = json.load(f)
+        run(models.Payload(**json_payload))

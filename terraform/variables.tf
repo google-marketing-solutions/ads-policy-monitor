@@ -43,14 +43,13 @@ variable "bq_output_dataset" {
   default     = "ads_policy_monitor"
 }
 
-variable "bq_output_table" {
-  type        = string
-  description = "The name of the BQ dataset"
-  default     = "ads_policy"
-}
-
 variable "customer_ids" {
   type        = list(number)
   description = "The list of customer IDs to be scanned for policy violations"
   default     = []
+}
+
+variable "bq_expiration_days" {
+  type        = number
+  description = "The number of days to keep data in a BigQuery partition."
 }

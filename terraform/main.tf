@@ -8,9 +8,9 @@ resource "google_service_account" "service_account" {
   account_id   = "ads-policy-monitor"
   display_name = "Service Account for running Ads Policy Monitor"
 }
-resource "google_project_iam_member" "cloud_functions_invoker_role" {
+resource "google_project_iam_member" "cloud_run_invoker_role" {
   project = var.project_id
-  role    = "roles/cloudfunctions.invoker"
+  role    = "roles/run.invoker"
   member  = "serviceAccount:${google_service_account.service_account.email}"
 }
 resource "google_project_iam_member" "bigquery_admin_role" {
@@ -27,10 +27,14 @@ resource "google_bigquery_dataset" "dataset" {
   delete_contents_on_destroy  = true
 }
 
-resource "google_bigquery_table" "google_ads_policy_table" {
+resource "google_bigquery_table" "ad_policy_data_table" {
   dataset_id          = google_bigquery_dataset.dataset.dataset_id
-  table_id            = var.bq_output_table
+  table_id            = "ad_policy_data"
   deletion_protection = false
+  time_partitioning {
+    type          = "DAY"
+    expiration_ms = 86400000 * var.bq_expiration_days
+  }
 }
 
 # CLOUD STORAGE ----------------------------------------------------------------
@@ -53,30 +57,38 @@ resource "google_storage_bucket" "function_bucket" {
 }
 
 # CLOUD FUNCTIONS --------------------------------------------------------------
-data "archive_file" "get_ad_policy_data_zip" {
+data "archive_file" "ads_policy_monitor_zip" {
   type        = "zip"
-  output_path = ".temp/get_ad_policy_data_source.zip"
-  source_dir  = "../cloud_functions/get_ad_policy_data"
+  output_path = ".temp/ads_policy_monitor_source.zip"
+  source_dir  = "../cloud_functions/ads_policy_monitor"
 }
 resource "google_storage_bucket_object" "google_ad_policy_data" {
-  name       = "get_ad_policy_data_${data.archive_file.get_ad_policy_data_zip.output_md5}.zip"
+  name       = "ads_policy_monitor_${data.archive_file.ads_policy_monitor_zip.output_md5}.zip"
   bucket     = google_storage_bucket.function_bucket.name
-  source     = data.archive_file.get_ad_policy_data_zip.output_path
-  depends_on = [data.archive_file.get_ad_policy_data_zip]
+  source     = data.archive_file.ads_policy_monitor_zip.output_path
+  depends_on = [data.archive_file.ads_policy_monitor_zip]
 }
 
-resource "google_cloudfunctions_function" "fetch_ads_policy_data_function" {
-  region                = var.region
-  name                  = "fetch_ads_policy"
+resource "google_cloudfunctions2_function" "fetch_ads_policy_monitor_function" {
+  location              = var.region
+  name                  = "ads_policy_monitor"
   description           = "Fetches policy approval data from running Google Ads campaigns."
-  runtime               = "python311"
-  service_account_email = google_service_account.service_account.email
-  timeout               = 540
-  available_memory_mb   = 1024
-  entry_point           = "main"
-  trigger_http          = true
-  source_archive_bucket = google_storage_bucket.function_bucket.name
-  source_archive_object = google_storage_bucket_object.google_ad_policy_data.name
+
+  build_config {
+    runtime     = "python311"
+    entry_point = "main"
+    source {
+      storage_source {
+        bucket = google_storage_bucket.function_bucket.name
+        object = google_storage_bucket_object.google_ad_policy_data.name
+      }
+    }
+  }
+  service_config {
+    available_memory      = "1G"
+    timeout_seconds       = 3600
+    service_account_email = google_service_account.service_account.email
+  }
 }
 
 # CLOUD_SCHEDULER --------------------------------------------------------------
@@ -84,7 +96,7 @@ locals {
   scheduler_body = templatefile("${path.module}/scheduler.tmpl", {
     project_id = var.project_id
     bq_output_dataset = var.bq_output_dataset
-    bq_output_table = var.bq_output_table
+    region = var.region
     google_ads_developer_token = var.google_ads_developer_token
     oauth_refresh_token = var.oauth_refresh_token
     google_cloud_client_id = var.google_cloud_client_id
@@ -103,7 +115,7 @@ resource "google_cloud_scheduler_job" "ads_policy_daily_scheduler" {
 
   http_target {
     http_method = "POST"
-    uri         = google_cloudfunctions_function.fetch_ads_policy_data_function.https_trigger_url
+    uri         = google_cloudfunctions2_function.fetch_ads_policy_monitor_function.service_config[0].uri
     body        = base64encode(local.scheduler_body)
     headers     = {
       "Content-Type" = "application/json"

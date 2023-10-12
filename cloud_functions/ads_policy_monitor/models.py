@@ -11,15 +11,22 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from typing import List
-"""The pydantic models for the project."""
+"""The pydantic models & constants for the project."""
+from enum import Enum
+from typing import List, Optional
 from pydantic import BaseModel, SecretStr
 
 
-class Config(BaseModel):
+class ReportType(Enum):
+    OCID = 'OCID'
+    AD_POLICY_DATA = 'AD_POLICY_DATA'
+
+
+class Payload(BaseModel):
+    reports_to_run: Optional[List[ReportType]] = None
     project_id: str
     bq_output_dataset: str
-    bq_output_table: str
+    region: str
     google_ads_developer_token: SecretStr
     oauth_refresh_token: SecretStr
     google_cloud_client_id: str

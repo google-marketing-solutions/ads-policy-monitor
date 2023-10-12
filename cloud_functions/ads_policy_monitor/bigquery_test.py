@@ -13,22 +13,20 @@
 # limitations under the License.
 """Unit tests for bigquery.py"""
 import unittest
-from unittest.mock import MagicMock, patch
-import pandas as pd
+from unittest.mock import MagicMock
 import bigquery
 
 
 class BigQueryTestCase(unittest.TestCase):
 
-    @patch('bigquery.pandas_gbq.to_gbq')
-    def test_write_output_dataframe(self, mock_pandas_gbq):
-        mock_df = pd.DataFrame([{
-            'col_a': 1,
-            'col_b': 2,
-        }])
-        mock_config = MagicMock()
-        bigquery.write_output_dataframe(config=mock_config, output_df=mock_df)
-        mock_pandas_gbq.assert_called_once()
+    def test_write_gaarf_report_to_bigquery(self):
+        mock_payload = MagicMock()
+        mock_bq_writer = MagicMock()
+        mock_gaarf_report = MagicMock()
+        bigquery.write_gaarf_report_to_bigquery(mock_payload, mock_gaarf_report,
+                                                'table_name', mock_bq_writer)
+        mock_bq_writer.write.assert_called_with(mock_gaarf_report,
+                                                destination='table_name')
 
 
 if __name__ == '__main__':
