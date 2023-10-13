@@ -18,6 +18,11 @@ resource "google_project_iam_member" "bigquery_admin_role" {
   role    = "roles/bigquery.admin"
   member  = "serviceAccount:${google_service_account.service_account.email}"
 }
+resource "google_project_iam_member" "secret_accessor_role" {
+  project = var.project_id
+  role    = "roles/secretmanager.secretAccessor"
+  member  = "serviceAccount:${google_service_account.service_account.email}"
+}
 
 # BIGQUERY ---------------------------------------------------------------------
 resource "google_bigquery_dataset" "dataset" {
@@ -88,6 +93,31 @@ resource "google_cloudfunctions2_function" "fetch_ads_policy_monitor_function" {
     available_memory      = "1G"
     timeout_seconds       = 3600
     service_account_email = google_service_account.service_account.email
+
+    secret_environment_variables {
+      project_id = var.project_id
+      key        = "GOOGLE_ADS_REFRESH_TOKEN"
+      secret     = google_secret_manager_secret.oauth_refresh_token_secret.secret_id
+      version    = "latest"
+    }
+    secret_environment_variables {
+      project_id = var.project_id
+      key        = "GOOGLE_ADS_CLIENT_ID"
+      secret     = google_secret_manager_secret.client_id_secret.secret_id
+      version    = "latest"
+    }
+    secret_environment_variables {
+      project_id = var.project_id
+      key        = "GOOGLE_ADS_CLIENT_SECRET"
+      secret     = google_secret_manager_secret.client_secret_secret.secret_id
+      version    = "latest"
+    }
+    secret_environment_variables {
+      project_id = var.project_id
+      key        = "GOOGLE_ADS_DEVELOPER_TOKEN"
+      secret     = google_secret_manager_secret.developer_token_secret.secret_id
+      version    = "latest"
+    }
   }
 }
 
@@ -97,10 +127,6 @@ locals {
     project_id = var.project_id
     bq_output_dataset = var.bq_output_dataset
     region = var.region
-    google_ads_developer_token = var.google_ads_developer_token
-    oauth_refresh_token = var.oauth_refresh_token
-    google_cloud_client_id = var.google_cloud_client_id
-    google_cloud_client_secret = var.google_cloud_client_secret
     google_ads_login_customer_id = var.google_ads_login_customer_id
     customer_ids = var.customer_ids
   })
@@ -124,4 +150,47 @@ resource "google_cloud_scheduler_job" "ads_policy_daily_scheduler" {
       service_account_email = google_service_account.service_account.email
     }
   }
+}
+
+# SECRET MANAGER ---------------------------------------------------------------
+resource "google_secret_manager_secret" "oauth_refresh_token_secret" {
+  secret_id = "ads-policy-monitor-oauth-refresh-token-secret"
+  replication {
+    auto {}
+  }
+}
+resource "google_secret_manager_secret" "client_id_secret" {
+  secret_id = "ads-policy-monitor-client-id-secret"
+  replication {
+    auto {}
+  }
+}
+resource "google_secret_manager_secret" "client_secret_secret" {
+  secret_id = "ads-policy-monitor-client-secret-secret"
+  replication {
+    auto {}
+  }
+}
+resource "google_secret_manager_secret" "developer_token_secret" {
+  secret_id = "ads-policy-monitor-developer-token-secret"
+  replication {
+    auto {}
+  }
+}
+
+resource "google_secret_manager_secret_version" "oauth_refresh_token_secret_version" {
+  secret = google_secret_manager_secret.oauth_refresh_token_secret.id
+  secret_data = var.oauth_refresh_token
+}
+resource "google_secret_manager_secret_version" "client_id_secret_version" {
+  secret = google_secret_manager_secret.client_id_secret.id
+  secret_data = var.google_cloud_client_id
+}
+resource "google_secret_manager_secret_version" "client_secret_secret_version" {
+  secret = google_secret_manager_secret.client_secret_secret.id
+  secret_data = var.google_cloud_client_secret
+}
+resource "google_secret_manager_secret_version" "developer_token_secret_version" {
+  secret = google_secret_manager_secret.developer_token_secret.id
+  secret_data = var.google_ads_developer_token
 }

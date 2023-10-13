@@ -13,6 +13,7 @@
 # limitations under the License.
 """Utilities for working with the Google Ads API."""
 import logging
+import os
 import sys
 from typing import List
 
@@ -31,6 +32,11 @@ logger.setLevel(logging.INFO)
 
 GOOGLE_ADS_API_VERSION = 'v14'
 
+GOOGLE_ADS_REFRESH_TOKEN = os.environ.get('GOOGLE_ADS_REFRESH_TOKEN')
+GOOGLE_ADS_CLIENT_ID = os.environ.get('GOOGLE_ADS_CLIENT_ID')
+GOOGLE_ADS_CLIENT_SECRET = os.environ.get('GOOGLE_ADS_CLIENT_SECRET')
+GOOGLE_ADS_DEVELOPER_TOKEN = os.environ.get('GOOGLE_ADS_DEVELOPER_TOKEN')
+
 
 def get_ads_client(payload: models.Payload) -> GoogleAdsApiClient:
     """Get a Google Ads Client based on the payload.
@@ -43,18 +49,12 @@ def get_ads_client(payload: models.Payload) -> GoogleAdsApiClient:
     """
     logger.info('Getting Google Ads client.')
     credentials = {
-        'developer_token':
-            payload.google_ads_developer_token.get_secret_value(),
-        'refresh_token':
-            payload.oauth_refresh_token.get_secret_value(),
-        'client_id':
-            payload.google_cloud_client_id,
-        'client_secret':
-            payload.google_cloud_client_secret.get_secret_value(),
-        'use_proto_plus':
-            True,
-        'login_customer_id':
-            payload.google_ads_login_customer_id,
+        'developer_token': GOOGLE_ADS_DEVELOPER_TOKEN,
+        'refresh_token': GOOGLE_ADS_REFRESH_TOKEN,
+        'client_id': GOOGLE_ADS_CLIENT_ID,
+        'client_secret': GOOGLE_ADS_CLIENT_SECRET,
+        'use_proto_plus': True,
+        'login_customer_id': payload.google_ads_login_customer_id,
     }
     return GoogleAdsApiClient(config_dict=credentials,
                               version=GOOGLE_ADS_API_VERSION)

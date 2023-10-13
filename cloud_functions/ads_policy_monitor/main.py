@@ -62,18 +62,6 @@ request_schema = {
         'region': {
             'type': 'string'
         },
-        'google_ads_developer_token': {
-            'type': 'string'
-        },
-        'oauth_refresh_token': {
-            'type': 'string'
-        },
-        'google_cloud_client_id': {
-            'type': 'string'
-        },
-        'google_cloud_client_secret': {
-            'type': 'string'
-        },
         'google_ads_login_customer_id': {
             'type': 'number'
         },
@@ -85,10 +73,6 @@ request_schema = {
         'project_id',
         'bq_output_dataset',
         'region',
-        'google_ads_developer_token',
-        'oauth_refresh_token',
-        'google_cloud_client_id',
-        'google_cloud_client_secret',
         'google_ads_login_customer_id',
         'customer_ids',
     ]

@@ -14,7 +14,7 @@
 """The pydantic models & constants for the project."""
 from enum import Enum
 from typing import List, Optional
-from pydantic import BaseModel, SecretStr
+from pydantic import BaseModel
 
 
 class ReportType(Enum):
@@ -27,9 +27,5 @@ class Payload(BaseModel):
     project_id: str
     bq_output_dataset: str
     region: str
-    google_ads_developer_token: SecretStr
-    oauth_refresh_token: SecretStr
-    google_cloud_client_id: str
-    google_cloud_client_secret: SecretStr
     google_ads_login_customer_id: int
     customer_ids: List[int]
