@@ -88,7 +88,7 @@ def run_gaarf_report(payload: models.Payload,
                                  customer_ids=payload.customer_ids)
 
     if report_type in [models.ReportType.AD_POLICY_DATA]:
-        path = f'sql/{report_type.value.lower()}.sql'
+        path = f'gaql/{report_type.value.lower()}.sql'
         return run_query_from_file(
             query_path=path,
             report_fetcher=report_fetcher,
