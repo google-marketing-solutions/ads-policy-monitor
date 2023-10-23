@@ -34,7 +34,7 @@ resource "google_bigquery_dataset" "dataset" {
 
 resource "google_bigquery_table" "ad_policy_data_table" {
   dataset_id          = google_bigquery_dataset.dataset.dataset_id
-  table_id            = "ad_policy_data"
+  table_id            = "AdPolicyData"
   deletion_protection = false
   schema              = file("../bigquery/schema/ad_policy_data_schema.json")
   time_partitioning {

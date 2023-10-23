@@ -1,0 +1,16 @@
+{
+  "reports": [
+    {
+      "table_name": "Ocid",
+      "write_disposition": "WRITE_TRUNCATE",
+      "is_builtin": true,
+      "builtin_query_name": "ocid_mapping"
+    },
+    {
+      "table_name": "AdPolicyData",
+      "write_disposition": "WRITE_APPEND",
+      "is_builtin": false,
+      "gaql_filename": "ad_policy_data.sql"
+    }
+  ]
+}

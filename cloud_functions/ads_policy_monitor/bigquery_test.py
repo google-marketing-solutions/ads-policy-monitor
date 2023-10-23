@@ -23,10 +23,13 @@ class BigQueryTestCase(unittest.TestCase):
         mock_payload = MagicMock()
         mock_bq_writer = MagicMock()
         mock_gaarf_report = MagicMock()
+        mock_report_config = MagicMock()
+        mock_report_config.table_name.return_value = 'table_name'
         bigquery.write_gaarf_report_to_bigquery(mock_payload, mock_gaarf_report,
-                                                'table_name', mock_bq_writer)
-        mock_bq_writer.write.assert_called_with(mock_gaarf_report,
-                                                destination='table_name')
+                                                mock_report_config,
+                                                mock_bq_writer)
+        mock_bq_writer.write.assert_called_with(
+            mock_gaarf_report, destination=mock_report_config.table_name)
 
 
 if __name__ == '__main__':

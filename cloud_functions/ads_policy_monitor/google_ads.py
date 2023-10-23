@@ -61,13 +61,13 @@ def get_ads_client(payload: models.Payload) -> GoogleAdsApiClient:
 
 
 def run_gaarf_report(payload: models.Payload,
-                     report_type: models.ReportType,
+                     report_config: models.ReportConfig,
                      report_fetcher: AdsReportFetcher = None) -> GaarfReport:
     """Run a report through GAARF.
 
     Args:
         payload: the configuration used in this execution.
-        report_type: the report to run.
+        report_config: the config of the report to run.
         report_fetcher: an instance of the AdsReportFetcher for dependency
             injection.
 
@@ -77,25 +77,22 @@ def run_gaarf_report(payload: models.Payload,
     Raises:
         NotImplementedError if an unexpected report type is provided.
     """
-    logger.info('Running report from gaarf for %s:', report_type.value)
+    logger.info('Running report from gaarf for %s:', report_config.table_name)
     if report_fetcher is None:
         client = get_ads_client(payload)
         report_fetcher = AdsReportFetcher(client)
 
-    if report_type == models.ReportType.OCID:
-        return run_builtin_query(query_name='ocid_mapping',
+    if report_config.is_builtin:
+        return run_builtin_query(query_name=report_config.builtin_query_name,
                                  report_fetcher=report_fetcher,
                                  customer_ids=payload.customer_ids)
 
-    if report_type in [models.ReportType.AD_POLICY_DATA]:
-        path = f'gaql/{report_type.value.lower()}.sql'
-        return run_query_from_file(
-            query_path=path,
-            report_fetcher=report_fetcher,
-            customer_ids=payload.customer_ids,
-        )
-
-    raise NotImplementedError(f'{report_type.value} has not been implemented')
+    path = f'gaql/{report_config.gaql_filename}'
+    return run_query_from_file(
+        query_path=path,
+        report_fetcher=report_fetcher,
+        customer_ids=payload.customer_ids,
+    )
 
 
 def run_builtin_query(query_name: str, report_fetcher: AdsReportFetcher,

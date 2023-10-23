@@ -30,6 +30,7 @@ import jsonschema
 import bigquery
 import google_ads
 import models
+import utils
 
 logging.basicConfig(stream=sys.stdout)
 logger = logging.getLogger(__name__)
@@ -38,12 +39,6 @@ logger.setLevel(logging.INFO)
 # For local deployment create a flag for the json config file
 parser = argparse.ArgumentParser()
 parser.add_argument('payload_file', type=argparse.FileType('r'))
-
-# The default reports to run
-DEFAULT_REPORTS_TO_RUN = [
-    models.ReportType.OCID,
-    models.ReportType.AD_POLICY_DATA,
-]
 
 # The schema of the JSON request
 request_schema = {
@@ -125,14 +120,17 @@ def run(payload: models.Payload) -> None:
     logger.info('Running the orchestration for payload:')
     logger.info(payload)
 
-    reports_to_run = payload.reports_to_run or DEFAULT_REPORTS_TO_RUN
+    report_configs = utils.load_report_configs()
+    reports_to_run = payload.reports_to_run or report_configs.keys()
+
     for report in reports_to_run:
-        gaarf_report = google_ads.run_gaarf_report(payload, report)
+        report_config = report_configs[report]
+        gaarf_report = google_ads.run_gaarf_report(payload, report_config)
         if gaarf_report is None:
             logger.warning('GAARF report is None, check configuration.')
             return None
         bigquery.write_gaarf_report_to_bigquery(payload, gaarf_report,
-                                                report.value.lower())
+                                                report_config)
     logger.info('Done.')
 
 

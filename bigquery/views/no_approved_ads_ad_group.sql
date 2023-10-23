@@ -22,7 +22,7 @@ WITH AdCounts AS (
     ad_group_name,
     COUNT(*) AS number_of_ads,
   FROM
-    `${BQ_DATASET}.ad_policy_data`
+    `${BQ_DATASET}.AdPolicyData`
   WHERE
     CAST(_PARTITIONTIME AS DATE) = CURRENT_DATE()
   GROUP BY
@@ -34,7 +34,7 @@ DisapprovedAds AS (
     ad_group_id,
     COUNT(*) AS disapproved_ads,
   FROM
-    `${BQ_DATASET}.ad_policy_data`
+    `${BQ_DATASET}.AdPolicyData`
   WHERE
     CAST(_PARTITIONTIME AS DATE) = CURRENT_DATE()
     AND ad_group_ad_policy_summary_approval_status != 'APPROVED'

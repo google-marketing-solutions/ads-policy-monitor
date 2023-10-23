@@ -11,23 +11,19 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""The pydantic models & constants for the project."""
-from typing import List, Optional
-from pydantic import BaseModel
+"""Unit tests for utils.py"""
+import unittest
+import utils
 
 
-class ReportConfig(BaseModel):
-    table_name: str
-    write_disposition: str
-    is_builtin: bool = False
-    builtin_query_name: Optional[str] = None
-    gaql_filename: Optional[str] = None
+class UtilsTestCase(unittest.TestCase):
+
+    def test_load_report_configs(self):
+        response = utils.load_report_configs()
+        self.assertEqual(len(response.keys()), 2)
+        self.assertIsNotNone(response.get('Ocid'))
+        self.assertIsNotNone(response.get('AdPolicyData'))
 
 
-class Payload(BaseModel):
-    reports_to_run: Optional[List[str]] = None
-    project_id: str
-    bq_output_dataset: str
-    region: str
-    google_ads_login_customer_id: int
-    customer_ids: List[int]
+if __name__ == '__main__':
+    unittest.main()

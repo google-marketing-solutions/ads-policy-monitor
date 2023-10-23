@@ -23,13 +23,23 @@ class GoogleAdsTestCase(unittest.TestCase):
     def setUp(self) -> None:
         self.mock_payload = MagicMock()
         self.mock_report_fetcher = MagicMock()
+        self.ocid_report_config = models.ReportConfig(
+            table_name='Ocid',
+            write_disposition='WRITE_TRUNCATE',
+            is_builtin=True,
+            builtin_query_name='ocid_mapping')
+        self.ad_policy_data_config = models.ReportConfig(
+            table_name='AdPolicyData',
+            write_disposition='WRITE_APPEND',
+            is_builtin=False,
+            gaql_filename='ad_policy_data.sql')
 
     @patch('google_ads.run_builtin_query')
     def test_run_gaarf_report_with_ocid(self, mock_run_builtin_query):
-        google_ads.run_gaarf_report(self.mock_payload, models.ReportType.OCID,
+        google_ads.run_gaarf_report(self.mock_payload, self.ocid_report_config,
                                     self.mock_report_fetcher)
         mock_run_builtin_query.assert_called_with(
-            query_name='ocid_mapping',
+            query_name=self.ocid_report_config.builtin_query_name,
             report_fetcher=self.mock_report_fetcher,
             customer_ids=self.mock_payload.customer_ids,
         )
@@ -38,16 +48,9 @@ class GoogleAdsTestCase(unittest.TestCase):
     def test_run_gaarf_report_with_ad_policy_data(self,
                                                   mock_run_query_from_file):
         google_ads.run_gaarf_report(self.mock_payload,
-                                    models.ReportType.AD_POLICY_DATA,
+                                    self.ad_policy_data_config,
                                     self.mock_report_fetcher)
         mock_run_query_from_file.assert_called_once()
-
-    def test_run_gaarf_report_with_not_implmented_report(self):
-        mock_report_type = MagicMock()
-        mock_report_type.value.return_value = 'TEST_REPORT_TYPE'
-        with self.assertRaises(NotImplementedError):
-            google_ads.run_gaarf_report(self.mock_payload, mock_report_type,
-                                        self.mock_report_fetcher)
 
 
 if __name__ == '__main__':
