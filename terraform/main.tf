@@ -43,6 +43,13 @@ resource "google_bigquery_table" "ad_policy_data_table" {
   }
 }
 
+resource "google_bigquery_table" "ocid_table" {
+  dataset_id          = google_bigquery_dataset.dataset.dataset_id
+  table_id            = "Ocid"
+  deletion_protection = false
+  schema              = file("../bigquery/schema/ocid_schema.json")
+}
+
 resource "google_bigquery_table" "no_approved_ads_ad_group_report" {
   dataset_id          = google_bigquery_dataset.dataset.dataset_id
   table_id            = "NoApprovedAdsAdGroup"
@@ -57,6 +64,26 @@ resource "google_bigquery_table" "no_approved_ads_ad_group_report" {
     {
       BQ_DATASET = google_bigquery_dataset.dataset.dataset_id
     }
+    )
+    use_legacy_sql = false
+  }
+}
+
+resource "google_bigquery_table" "latest_ad_policy_data_report" {
+  dataset_id          = google_bigquery_dataset.dataset.dataset_id
+  table_id            = "LatestAdPolicyData"
+  deletion_protection = false
+  depends_on          = [
+    google_bigquery_dataset.dataset,
+    google_bigquery_table.ad_policy_data_table,
+    google_bigquery_table.ocid_table,
+  ]
+  view {
+    query = templatefile(
+      "../bigquery/views/latest_ad_policy_data.sql",
+      {
+        BQ_DATASET = google_bigquery_dataset.dataset.dataset_id
+      }
     )
     use_legacy_sql = false
   }

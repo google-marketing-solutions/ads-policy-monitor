@@ -1,0 +1,12 @@
+[
+  {
+    "name": "account_id",
+    "type": "INTEGER",
+    "mode": "NULLABLE"
+  },
+  {
+    "name": "ocid",
+    "type": "STRING",
+    "mode": "NULLABLE"
+  }
+]
