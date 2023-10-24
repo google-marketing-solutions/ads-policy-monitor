@@ -52,4 +52,5 @@ variable "customer_ids" {
 variable "bq_expiration_days" {
   type        = number
   description = "The number of days to keep data in a BigQuery partition."
+  default     = 90
 }
