@@ -20,13 +20,17 @@ WITH AdCounts AS (
     customer_descriptive_name,
     ad_group_id,
     ad_group_name,
+    CONCAT("https://ads.google.com/aw/overview?ocid=", Ocid.ocid) AS gads_link,
     COUNT(*) AS number_of_ads,
   FROM
-    `${BQ_DATASET}.AdPolicyData`
+    `${BQ_DATASET}.AdPolicyData` AS AdPolicyData
+  LEFT JOIN
+    `${BQ_DATASET}.Ocid` AS Ocid ON
+    Ocid.account_id = AdPolicyData.customer_id
   WHERE
     CAST(_PARTITIONTIME AS DATE) = CURRENT_DATE()
   GROUP BY
-    1,2,3,4
+    1,2,3,4,5
 ),
 DisapprovedAds AS (
   SELECT
