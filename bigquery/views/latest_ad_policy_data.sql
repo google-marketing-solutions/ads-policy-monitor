@@ -18,6 +18,9 @@ SELECT
   Ocid.ocid,
   CONCAT("https://ads.google.com/aw/overview?ocid=", Ocid.ocid) AS gads_link,
   AdPolicyData.*,
+  SPLIT(
+    AdPolicyData.ad_group_ad_policy_summary_policy_topic_entries,
+    "|") AS ad_policy_topics,
 FROM
   `${BQ_DATASET}.AdPolicyData` AS AdPolicyData
 LEFT JOIN

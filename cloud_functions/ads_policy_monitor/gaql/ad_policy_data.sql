@@ -25,7 +25,7 @@ SELECT
   ad_group_ad.ad.id,
   ad_group_ad.status,
   ad_group_ad.policy_summary.approval_status,
-  ad_group_ad.policy_summary.policy_topic_entries,
+  ad_group_ad.policy_summary.policy_topic_entries:topic AS ad_group_ad_policy_summary_policy_topic_entries,
   ad_group_ad.policy_summary.review_status
 FROM
   ad_group_ad
