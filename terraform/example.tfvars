@@ -1,7 +1,8 @@
 #The Google Cloud project ID used for this code.
 project_id = ""
 # The region where you would like to store data in BigQuery and host the Cloud
-# functions, e.g. europe-west2
+# functions, e.g. europe-west2. Please note: Region selected needs to support Cloud Scheduler. 
+# Up to date information on region support can be found at https://cloud.google.com/about/locations
 region = ""
 # These next variables are for pulling data from Google Ads. Read:
 # https://developers.google.com/google-ads/api/docs/get-started/introduction
