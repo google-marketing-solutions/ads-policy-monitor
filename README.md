@@ -49,7 +49,8 @@ The code is deployed using [Terraform](https://www.terraform.io/).
      cloudfunctions.googleapis.com \
      cloudresourcemanager.googleapis.com \
      googleads.googleapis.com \
-     iam.googleapis.com
+     iam.googleapis.com \
+     secretmanager.googleapis.com
    ```
 
 ### Terraform
@@ -64,7 +65,9 @@ terraform init -backend-config="bucket=[BUCKET_NAME_FROM_STEP2]"
 terraform apply --var-file example.tfvars
 ```
 
-## Code formatting
+## Contributing
+
+### Code formatting
 
 The code is formatted using [yapf](https://github.com/google/yapf). After making
 a change, before submitting the code please do the following:
