@@ -1,0 +1,32 @@
+# Workflow for code formatting for the repo
+name: Ads Policy Monitor Code Formatting
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo code
+        uses: actions/checkout@v3
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements_dev.txt
+      - name: Run YAPF code formatter
+        # When the code isn't formatted correctly it will return exit code 1, else
+        # code 0. A non-zero value is determined a failure in this workflow:
+        # https://docs.github.com/en/actions/creating-actions/setting-exit-codes-for-actions#about-exit-codes
+        run: |
+          yapf --style google -q -r .
