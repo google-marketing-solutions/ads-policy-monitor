@@ -30,3 +30,9 @@ jobs:
       working-directory: ./cloud_functions/ads_policy_monitor
       run: |
         pytest
+    - name: Run YAPF code formatter
+      # When the code isn't formatted correctly it will return exit code 1, else
+      # code 0. A non-zero value is determined a failure in this workflow:
+      # https://docs.github.com/en/actions/creating-actions/setting-exit-codes-for-actions#about-exit-codes
+      run: |
+        yapf --style google -q -r .
