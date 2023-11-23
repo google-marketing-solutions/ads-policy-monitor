@@ -50,7 +50,9 @@ The code is deployed using [Terraform](https://www.terraform.io/).
      cloudresourcemanager.googleapis.com \
      googleads.googleapis.com \
      iam.googleapis.com \
-     secretmanager.googleapis.com
+     secretmanager.googleapis.com \
+     run.googleapis.com \
+     cloudscheduler.googleapis.com
    ```
 
 ### Terraform
