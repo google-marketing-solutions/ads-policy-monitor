@@ -24,7 +24,8 @@ SELECT
 FROM
   `${BQ_DATASET}.AdPolicyData` AS AdPolicyData
 LEFT JOIN
-  `${BQ_DATASET}.Ocid` AS Ocid ON
-  Ocid.account_id = AdPolicyData.customer_id
+  (
+    SELECT DISTINCT account_id, ocid FROM `${BQ_DATASET}.Ocid`
+  ) AS Ocid ON Ocid.account_id = AdPolicyData.customer_id
 WHERE
   EXTRACT(DATE FROM _PARTITIONTIME) = CURRENT_DATE()
