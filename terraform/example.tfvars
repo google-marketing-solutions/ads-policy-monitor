@@ -1,7 +1,9 @@
 #The Google Cloud project ID used for this code.
 project_id = ""
-# The region where you would like to store data in BigQuery and host the Cloud
-# functions, e.g. europe-west2. Please note: Region selected needs to support Cloud Scheduler. 
+#The Google Cloud bucket name to store the terraform state.
+bucket_name = "ads-pmd-bucket"
+# The region where you would like to store data in BigQuery and other resources (Cloud funtion, scheduler, bucket).
+# e.g. europe-west2. Please note: Region selected needs to support Cloud Scheduler. 
 # Up to date information on region support can be found at https://cloud.google.com/about/locations
 region = ""
 # These next variables are for pulling data from Google Ads. Read:
