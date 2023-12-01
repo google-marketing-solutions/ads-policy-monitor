@@ -51,8 +51,6 @@ if [ $? -eq 0 ]; then
     run.googleapis.com \
     cloudscheduler.googleapis.com
 
-  pwd 
-
   echo "Initializing terraform..."
   cd terraform
   terraform init -backend-config="bucket=$BUCKET_NAME"
