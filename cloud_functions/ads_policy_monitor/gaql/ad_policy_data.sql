@@ -26,7 +26,9 @@ SELECT
   ad_group_ad.status,
   ad_group_ad.policy_summary.approval_status,
   ad_group_ad.policy_summary.policy_topic_entries:topic AS ad_group_ad_policy_summary_policy_topic_entries,
-  ad_group_ad.policy_summary.review_status
+  ad_group_ad.policy_summary.review_status,
+  metrics.impressions AS impressions,
+  metrics.clicks AS clicks
 FROM
   ad_group_ad
 WHERE
@@ -35,3 +37,4 @@ WHERE
   AND campaign.primary_status != 'ENDED'
   AND ad_group.status = 'ENABLED'
   AND ad_group_ad.status != 'REMOVED'
+  AND segments.date DURING LAST_30_DAYS
