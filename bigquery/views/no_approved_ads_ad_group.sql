@@ -21,6 +21,8 @@ WITH AdCounts AS (
     ad_group_id,
     ad_group_name,
     CONCAT("https://ads.google.com/aw/overview?ocid=", Ocid.ocid) AS gads_link,
+    SUM(impressions) AS total_impressions,
+    SUM(clicks) AS total_clicks,
     COUNT(*) AS number_of_ads,
   FROM
     `${BQ_DATASET}.AdPolicyData` AS AdPolicyData

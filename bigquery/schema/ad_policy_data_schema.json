@@ -73,5 +73,15 @@
       "name": "ad_group_ad_policy_summary_review_status",
       "type": "STRING",
       "mode": "NULLABLE"
+    },
+    {
+      "name": "impressions",
+      "type": "INTEGER",
+      "mode": "NULLABLE"
+    },
+    {
+      "name": "clicks",
+      "type": "INTEGER",
+      "mode": "NULLABLE"
     }
 ]
