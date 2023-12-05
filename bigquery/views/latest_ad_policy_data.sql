@@ -12,11 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 /**
- * A view that combines ocid with the latest data ads policy data.
+ * Pull the latest Ad Policy Data combined with deep links to Google Ads.
  */
 SELECT
   Ocid.ocid,
-  CONCAT("https://ads.google.com/aw/overview?ocid=", Ocid.ocid) AS gads_link,
+  STRUCT(
+    CONCAT("https://ads.google.com/aw/overview?ocid=", Ocid.ocid) AS home,
+    CONCAT(
+    "https://ads.google.com/aw/ads?campaignId=", AdPolicyData.campaign_id,
+    "&adGroupId=", AdPolicyData.ad_group_id,
+    "&ocid=", Ocid.ocid) AS ads
+   ) AS gads_links,
   AdPolicyData.*,
   SPLIT(
     AdPolicyData.ad_group_ad_policy_summary_policy_topic_entries,
