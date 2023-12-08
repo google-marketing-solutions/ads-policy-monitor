@@ -67,6 +67,11 @@ resource "google_bigquery_table" "no_approved_ads_ad_group_report" {
     )
     use_legacy_sql = false
   }
+  lifecycle {
+    replace_triggered_by = [
+      google_bigquery_table.ad_policy_data_table
+    ]
+  }
 }
 
 resource "google_bigquery_table" "latest_ad_policy_data_report" {

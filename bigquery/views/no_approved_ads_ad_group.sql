@@ -18,22 +18,18 @@ WITH AdCounts AS (
   SELECT
     customer_id,
     customer_descriptive_name,
+    campaign_id,
+    campaign_name,
     ad_group_id,
     ad_group_name,
-    CONCAT("https://ads.google.com/aw/overview?ocid=", Ocid.ocid) AS gads_link,
+    ANY_VALUE(gads_links) AS gads_links,
     SUM(impressions) AS total_impressions,
     SUM(clicks) AS total_clicks,
     COUNT(*) AS number_of_ads,
   FROM
-    `${BQ_DATASET}.AdPolicyData` AS AdPolicyData
-  LEFT JOIN
-  (
-    SELECT DISTINCT account_id, ocid FROM `${BQ_DATASET}.Ocid`
-  ) AS Ocid ON Ocid.account_id = AdPolicyData.customer_id
-  WHERE
-    CAST(_PARTITIONTIME AS DATE) = CURRENT_DATE()
+    `${BQ_DATASET}.LatestAdPolicyData`
   GROUP BY
-    1,2,3,4,5
+    1,2,3,4,5,6
 ),
 DisapprovedAds AS (
   SELECT
@@ -41,10 +37,9 @@ DisapprovedAds AS (
     ad_group_id,
     COUNT(*) AS disapproved_ads,
   FROM
-    `${BQ_DATASET}.AdPolicyData`
+    `${BQ_DATASET}.LatestAdPolicyData`
   WHERE
-    CAST(_PARTITIONTIME AS DATE) = CURRENT_DATE()
-    AND ad_group_ad_policy_summary_approval_status != 'APPROVED'
+    ad_group_ad_policy_summary_approval_status != 'APPROVED'
   GROUP BY
     1,2
 )
