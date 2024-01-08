@@ -186,6 +186,7 @@ locals {
     region = var.region
     google_ads_login_customer_id = var.google_ads_login_customer_id
     customer_ids = var.customer_ids
+    use_synthetic_data = var.use_synthetic_data
   })
 }
 resource "google_cloud_scheduler_job" "ads_policy_daily_scheduler" {

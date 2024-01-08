@@ -31,3 +31,4 @@ class Payload(BaseModel):
     region: str
     google_ads_login_customer_id: int
     customer_ids: List[int]
+    use_synthetic_data: bool = False

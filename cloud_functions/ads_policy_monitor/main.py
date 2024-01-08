@@ -63,6 +63,9 @@ request_schema = {
         'customer_ids': {
             'type': 'array'
         },
+        'use_synthetic_data': {
+            'type': 'boolean',
+        }
     },
     'required': [
         'project_id',
