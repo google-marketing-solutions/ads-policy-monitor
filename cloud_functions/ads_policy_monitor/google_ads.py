@@ -14,6 +14,7 @@
 """Utilities for working with the Google Ads API."""
 import logging
 import os
+import random
 import sys
 from typing import List
 
@@ -22,6 +23,8 @@ from gaarf.builtin_queries import BUILTIN_QUERIES
 from gaarf.io import reader
 from gaarf.query_executor import AdsReportFetcher
 from gaarf.report import GaarfReport
+import numpy as np
+import pandas as pd
 
 import models
 import utils
@@ -78,6 +81,11 @@ def run_gaarf_report(payload: models.Payload,
         NotImplementedError if an unexpected report type is provided.
     """
     logger.info('Running report from gaarf for %s:', report_config.table_name)
+
+    if payload.use_synthetic_data:
+        return get_google_ads_synthetic_data(
+            table_name=report_config.table_name)
+
     if report_fetcher is None:
         client = get_ads_client(payload)
         report_fetcher = AdsReportFetcher(client)
@@ -112,3 +120,20 @@ def run_query_from_file(query_path: str, report_fetcher: AdsReportFetcher,
     query = query.replace('{{ today }}', f'"{utils.get_current_date()}"')
     logger.info(query)
     return report_fetcher.fetch(query, customer_ids)
+
+
+def get_google_ads_synthetic_data(table_name: str) -> GaarfReport:
+    """Read in the synthetic data based on the table name of the report."""
+    logger.info('Fetching synthetic data for: %s', table_name)
+    df = pd.read_csv(f'synthetic_data/{table_name}.csv')
+    if table_name == 'AdPolicyData':
+        df['event_date'] = utils.get_current_date()
+        # Randomly drop a small subset of rows to add some variance to the time
+        # series.
+        perc_to_drop = random.randrange(1, 5) / 100
+        num_rows_to_drop = int(perc_to_drop * len(df))
+        random_indices = np.random.choice(df.index,
+                                          num_rows_to_drop,
+                                          replace=False)
+        df = df.drop(random_indices)
+    return GaarfReport.from_pandas(df)

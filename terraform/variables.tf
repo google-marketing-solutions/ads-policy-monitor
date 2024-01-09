@@ -54,3 +54,9 @@ variable "bq_expiration_days" {
   description = "The number of days to keep data in a BigQuery partition."
   default     = 90
 }
+
+variable "use_synthetic_data" {
+  type        = bool
+  description = "Set true to use synthetic dummy data instead of Google Ads data."
+  default     = false
+}

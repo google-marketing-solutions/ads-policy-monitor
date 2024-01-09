@@ -1,4 +1,5 @@
 functions-framework==3.*
 google-ads-api-report-fetcher==1.11.5
+numpy==1.26.1
 jsonschema==4.19.1
 pydantic==2.4.2
