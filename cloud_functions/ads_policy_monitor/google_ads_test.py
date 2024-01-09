@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Unit tests for google_ads.py"""
+import random
 import unittest
 from unittest.mock import MagicMock, patch
 import google_ads
@@ -22,6 +23,7 @@ class GoogleAdsTestCase(unittest.TestCase):
 
     def setUp(self) -> None:
         self.mock_payload = MagicMock()
+        self.mock_payload.use_synthetic_data = False
         self.mock_report_fetcher = MagicMock()
         self.ocid_report_config = models.ReportConfig(
             table_name='Ocid',
@@ -44,6 +46,14 @@ class GoogleAdsTestCase(unittest.TestCase):
             customer_ids=self.mock_payload.customer_ids,
         )
 
+    @patch('google_ads.get_google_ads_synthetic_data')
+    def test_run_gaarf_report_for_synthetic_data(
+            self, mock_get_google_ads_synthetic_data):
+        self.mock_payload.use_synthetic_data = True
+        google_ads.run_gaarf_report(self.mock_payload, self.ocid_report_config,
+                                    self.mock_report_fetcher)
+        mock_get_google_ads_synthetic_data.assert_called_with(table_name='Ocid')
+
     @patch('google_ads.run_query_from_file')
     def test_run_gaarf_report_with_ad_policy_data(self,
                                                   mock_run_query_from_file):
@@ -51,6 +61,25 @@ class GoogleAdsTestCase(unittest.TestCase):
                                     self.ad_policy_data_config,
                                     self.mock_report_fetcher)
         mock_run_query_from_file.assert_called_once()
+
+    def test_get_google_ads_synthetic_data_ocid(self):
+        report = google_ads.get_google_ads_synthetic_data('Ocid')
+        self.assertTrue(len(report.column_names), 2)
+        self.assertEqual(report.column_names, ['account_id', 'ocid'])
+        self.assertTrue(len(report.results), 3)
+
+    @patch('google_ads.utils')
+    def test_get_google_ads_synthetic_data_ad_policy_data(self, mock_utils):
+        mock_utils.get_current_date.return_value = '2024-01-01'
+        random.seed(1)
+        report = google_ads.get_google_ads_synthetic_data('AdPolicyData')
+        self.assertTrue(len(report.column_names), 17)
+        self.assertEqual(report.results[0][0], '2024-01-01')
+        self.assertTrue(len(report.results), 998)
+
+    def test_get_google_ads_synthetic_data_missing(self):
+        with self.assertRaises(FileNotFoundError):
+            google_ads.get_google_ads_synthetic_data('MissingData')
 
 
 if __name__ == '__main__':
