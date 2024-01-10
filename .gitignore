@@ -155,3 +155,6 @@ creds.json
 out/
 terraform/.temp/
 terraform/.terraform/
+
+# OS
+.DS_Store
