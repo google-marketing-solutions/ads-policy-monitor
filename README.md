@@ -60,6 +60,7 @@ You're also able to see insights like when an ad group has no approved ads:
 - Access to the Google Ads API (e.g. developer token, account access), [see
   getting started](https://developers.google.com/google-ads/api/docs/get-started/introduction).
 - Access to Looker Studio or a dashboard solution that can connect to BigQuery.
+  - If you wish to have access to the Looker Studio template provided by Google, please join this group [ads-policy-monitor-template-readers](https://groups.google.com/g/ads-policy-monitor-template-readers).
 
 ## Deployment
 
