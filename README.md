@@ -6,6 +6,61 @@ reports._
 Ads Policy Monitor provides a data pipeline for pulling ad approval data from
 Google Ads, enabling you to monitor trends and spikes with ad approvals.
 
+## Solution Overview
+
+To keep ads safe and appropriate for everyone, ads are reviewed to make sure
+they comply with Google Ads policies, [read more here](
+https://support.google.com/google-ads/answer/1722120?sjid=13030684844768437853-EU).
+
+For large advertisers and agencies, it can be challenging to monitor the state
+of your ad copy across all of your Google Ads accounts. This can be amplified
+when automation is used to create ad copy, as it's easy to introduce mistakes
+that result in ads being disapproved, for example, the incorrect use of
+capitalisation.
+
+This solution pulls a daily snapshot of your ad policy approvals, stores them in
+BigQuery, and provides a Looker Studio dashboard template to monitor this.
+
+When disapprovals happen you can take action by following the deeplink into
+Google Ads to get more information and take action.
+
+In the dashboard you can instantly monitor the overall status of your accounts:
+![Dashboard overview](./docs/images/looker-studio-overview.png)
+
+And how this changes over time. This allows you to identify any changes in the
+trend, to investigate further.
+![Dashboard time series](./docs/images/looker-studio-time-series.png)
+
+You can drilldown into the disapprovals to try to get more information about why
+this has happened:
+![Dashboard disapprovals](./docs/images/looker-studio-disapprovals.png)
+
+You're also able to see insights like when an ad group has no approved ads:
+![Dashboard no approved ads](./docs/images/looker-studio-no-approved-ads.png)
+
+## How does it work?
+
+![Architecture diagram](./docs/images/architecture-diagram.png)
+
+1. A daily cron job runs that makes a HTTPS request to trigger the
+   `ads_policy_monitor` Cloud Function.
+2. The Cloud Function uses [Google Ads Query Language (GAQL)](
+   https://developers.google.com/google-ads/api/docs/query/overview) to run a
+   number of reports in Google Ads via the API.
+3. The output of these reports is written to a dataset in BigQuery called
+   `ads_policy_monitor`.
+4. We provide a template Looker Studio dashboard to visualise this data.
+   However, there is nothing to stop you using your own dashboard solution. For
+   example, it is possible to connect this data with the Looker Platform for
+   more advanced BI reporting, alerting, data drilldown etc.
+
+## Requirements
+
+- A Google Cloud Project
+- Access to the Google Ads API (e.g. developer token, account access), [see
+  getting started](https://developers.google.com/google-ads/api/docs/get-started/introduction).
+- Access to Looker Studio or a dashboard solution that can connect to BigQuery.
+
 ## Deployment
 
 The code is deployed using [Terraform](https://www.terraform.io/).
@@ -66,7 +121,7 @@ yapf --style google -r -i .
 ## Disclaimers
 __This is not an officially supported Google product.__
 
-Copyright 2023 Google LLC. This solution, including any related sample code or
+Copyright 2024 Google LLC. This solution, including any related sample code or
 data, is made available on an “as is,” “as available,” and “with all faults”
 basis, solely for illustrative purposes, and without warranty or representation
 of any kind. This solution is experimental, unsupported and provided solely for
