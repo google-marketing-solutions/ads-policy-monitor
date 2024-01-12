@@ -11,6 +11,12 @@
       "write_disposition": "WRITE_APPEND",
       "is_builtin": false,
       "gaql_filename": "ad_policy_data.sql"
+    },
+    {
+      "table_name": "AssetPolicyData",
+      "write_disposition": "WRITE_APPEND",
+      "is_builtin": false,
+      "gaql_filename": "asset_policy_data.sql"
     }
   ]
 }
