@@ -60,3 +60,15 @@ variable "use_synthetic_data" {
   description = "Set true to use synthetic dummy data instead of Google Ads data."
   default     = false
 }
+
+variable "label_keys" {
+  type        = list(string)
+  description = "A list of label keys to apply to the deployed infrastructure."
+  default     = ["app"]
+}
+
+variable "label_values" {
+  type        = list(string)
+  description = "A list of label values to apply to the deployed infrastructure."
+  default     = ["ads-policy-monitor"]
+}
