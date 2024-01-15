@@ -3,6 +3,12 @@ provider "google" {
   region  = var.region
 }
 
+locals {
+  labels = merge(
+  [for pair in setproduct(var.label_keys, var.label_values): { (pair[0]) = pair[1] }]...
+  )
+}
+
 # SERVICE ACCOUNT --------------------------------------------------------------
 resource "google_service_account" "service_account" {
   account_id   = "ads-policy-monitor"
@@ -30,6 +36,7 @@ resource "google_bigquery_dataset" "dataset" {
   location                    = var.region
   description                 = "Ads Policy Monitor BQ Dataset"
   delete_contents_on_destroy  = true
+  labels                      = local.labels
 }
 
 resource "google_bigquery_table" "ad_policy_data_table" {
@@ -37,6 +44,7 @@ resource "google_bigquery_table" "ad_policy_data_table" {
   table_id            = "AdPolicyData"
   deletion_protection = false
   schema              = file("../bigquery/schema/ad_policy_data_schema.json")
+  labels              = local.labels
   time_partitioning {
     type          = "DAY"
     expiration_ms = 86400000 * var.bq_expiration_days
@@ -59,15 +67,19 @@ resource "google_bigquery_table" "ocid_table" {
   table_id            = "Ocid"
   deletion_protection = false
   schema              = file("../bigquery/schema/ocid_schema.json")
+  labels              = local.labels
 }
 
 resource "google_bigquery_table" "no_approved_ads_ad_group_report" {
   dataset_id          = google_bigquery_dataset.dataset.dataset_id
   table_id            = "NoApprovedAdsAdGroup"
   deletion_protection = false
+  labels              = local.labels
   depends_on          = [
     google_bigquery_dataset.dataset,
     google_bigquery_table.ad_policy_data_table,
+    google_bigquery_table.latest_ad_policy_data_report,
+    google_bigquery_table.ocid_table,
   ]
   view {
     query = templatefile(
@@ -89,6 +101,7 @@ resource "google_bigquery_table" "latest_ad_policy_data_report" {
   dataset_id          = google_bigquery_dataset.dataset.dataset_id
   table_id            = "LatestAdPolicyData"
   deletion_protection = false
+  labels              = local.labels
   depends_on          = [
     google_bigquery_dataset.dataset,
     google_bigquery_table.ad_policy_data_table,
@@ -143,6 +156,7 @@ resource "google_storage_bucket" "function_bucket" {
   location                    = var.region
   force_destroy               = true
   uniform_bucket_level_access = true
+  labels                      = local.labels
 
   lifecycle_rule {
     condition {
@@ -171,6 +185,7 @@ resource "google_cloudfunctions2_function" "fetch_ads_policy_monitor_function" {
   location              = var.region
   name                  = "ads_policy_monitor"
   description           = "Fetches policy approval data from running Google Ads campaigns."
+  labels                = local.labels
 
   build_config {
     runtime     = "python311"
@@ -249,42 +264,46 @@ resource "google_cloud_scheduler_job" "ads_policy_daily_scheduler" {
 # SECRET MANAGER ---------------------------------------------------------------
 resource "google_secret_manager_secret" "oauth_refresh_token_secret" {
   secret_id = "ads-policy-monitor-oauth-refresh-token-secret"
+  labels    = local.labels
   replication {
     auto {}
   }
 }
 resource "google_secret_manager_secret" "client_id_secret" {
   secret_id = "ads-policy-monitor-client-id-secret"
+  labels    = local.labels
   replication {
     auto {}
   }
 }
 resource "google_secret_manager_secret" "client_secret_secret" {
   secret_id = "ads-policy-monitor-client-secret-secret"
+  labels    = local.labels
   replication {
     auto {}
   }
 }
 resource "google_secret_manager_secret" "developer_token_secret" {
   secret_id = "ads-policy-monitor-developer-token-secret"
+  labels    = local.labels
   replication {
     auto {}
   }
 }
 
 resource "google_secret_manager_secret_version" "oauth_refresh_token_secret_version" {
-  secret = google_secret_manager_secret.oauth_refresh_token_secret.id
+  secret      = google_secret_manager_secret.oauth_refresh_token_secret.id
   secret_data = var.oauth_refresh_token
 }
 resource "google_secret_manager_secret_version" "client_id_secret_version" {
-  secret = google_secret_manager_secret.client_id_secret.id
+  secret      = google_secret_manager_secret.client_id_secret.id
   secret_data = var.google_cloud_client_id
 }
 resource "google_secret_manager_secret_version" "client_secret_secret_version" {
-  secret = google_secret_manager_secret.client_secret_secret.id
+  secret      = google_secret_manager_secret.client_secret_secret.id
   secret_data = var.google_cloud_client_secret
 }
 resource "google_secret_manager_secret_version" "developer_token_secret_version" {
-  secret = google_secret_manager_secret.developer_token_secret.id
+  secret      = google_secret_manager_secret.developer_token_secret.id
   secret_data = var.google_ads_developer_token
 }
