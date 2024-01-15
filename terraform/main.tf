@@ -110,6 +110,31 @@ resource "google_bigquery_table" "latest_ad_policy_data_report" {
   }
 }
 
+resource "google_bigquery_table" "latest_asset_policy_data_report" {
+  dataset_id          = google_bigquery_dataset.dataset.dataset_id
+  table_id            = "LatestAssetPolicyData"
+  deletion_protection = false
+  depends_on          = [
+    google_bigquery_dataset.dataset,
+    google_bigquery_table.asset_policy_data_table,
+    google_bigquery_table.ocid_table,
+  ]
+  view {
+    query = templatefile(
+      "../bigquery/views/latest_asset_policy_data.sql",
+      {
+        BQ_DATASET = google_bigquery_dataset.dataset.dataset_id
+      }
+    )
+    use_legacy_sql = false
+  }
+  lifecycle {
+    replace_triggered_by = [
+      google_bigquery_table.asset_policy_data_table
+    ]
+  }
+}
+
 # CLOUD STORAGE ----------------------------------------------------------------
 # This bucket is used to store the cloud functions for deployment.
 # The project ID is used to make sure the name is globally unique
