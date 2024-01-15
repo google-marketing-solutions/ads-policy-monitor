@@ -26,3 +26,6 @@ bq_expiration_days = 90
 # Set this to true if you want to deploy the demo dashboard with synthetic data,
 # otherwise set false. If this is false it will pull data from Google Ads.
 use_synthetic_data = false
+# Label all the resources deployed with this solution
+label_keys = ["app"]
+label_values = ["ads-policy-monitor"]
