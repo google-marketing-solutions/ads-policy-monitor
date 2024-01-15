@@ -20,9 +20,10 @@ class UtilsTestCase(unittest.TestCase):
 
     def test_load_report_configs(self):
         response = utils.load_report_configs()
-        self.assertEqual(len(response.keys()), 2)
+        self.assertEqual(len(response.keys()), 3)
         self.assertIsNotNone(response.get('Ocid'))
         self.assertIsNotNone(response.get('AdPolicyData'))
+        self.assertIsNotNone(response.get('AssetPolicyData'))
 
 
 if __name__ == '__main__':

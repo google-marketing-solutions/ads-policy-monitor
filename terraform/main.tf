@@ -51,6 +51,18 @@ resource "google_bigquery_table" "ad_policy_data_table" {
   }
 }
 
+resource "google_bigquery_table" "asset_policy_data_table" {
+  dataset_id          = google_bigquery_dataset.dataset.dataset_id
+  table_id            = "AssetPolicyData"
+  deletion_protection = false
+  schema              = file("../bigquery/schema/asset_policy_data_schema.json")
+  labels              = local.labels
+  time_partitioning {
+    type          = "DAY"
+    expiration_ms = 86400000 * var.bq_expiration_days
+  }
+}
+
 resource "google_bigquery_table" "ocid_table" {
   dataset_id          = google_bigquery_dataset.dataset.dataset_id
   table_id            = "Ocid"
@@ -108,6 +120,32 @@ resource "google_bigquery_table" "latest_ad_policy_data_report" {
   lifecycle {
     replace_triggered_by = [
       google_bigquery_table.ad_policy_data_table
+    ]
+  }
+}
+
+resource "google_bigquery_table" "latest_asset_policy_data_report" {
+  dataset_id          = google_bigquery_dataset.dataset.dataset_id
+  table_id            = "LatestAssetPolicyData"
+  deletion_protection = false
+  labels              = local.labels
+  depends_on          = [
+    google_bigquery_dataset.dataset,
+    google_bigquery_table.asset_policy_data_table,
+    google_bigquery_table.ocid_table,
+  ]
+  view {
+    query = templatefile(
+      "../bigquery/views/latest_asset_policy_data.sql",
+      {
+        BQ_DATASET = google_bigquery_dataset.dataset.dataset_id
+      }
+    )
+    use_legacy_sql = false
+  }
+  lifecycle {
+    replace_triggered_by = [
+      google_bigquery_table.asset_policy_data_table
     ]
   }
 }
