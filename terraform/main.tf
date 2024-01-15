@@ -56,6 +56,7 @@ resource "google_bigquery_table" "asset_policy_data_table" {
   table_id            = "AssetPolicyData"
   deletion_protection = false
   schema              = file("../bigquery/schema/asset_policy_data_schema.json")
+  labels              = local.labels
   time_partitioning {
     type          = "DAY"
     expiration_ms = 86400000 * var.bq_expiration_days
@@ -127,6 +128,7 @@ resource "google_bigquery_table" "latest_asset_policy_data_report" {
   dataset_id          = google_bigquery_dataset.dataset.dataset_id
   table_id            = "LatestAssetPolicyData"
   deletion_protection = false
+  labels              = local.labels
   depends_on          = [
     google_bigquery_dataset.dataset,
     google_bigquery_table.asset_policy_data_table,
