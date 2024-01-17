@@ -1,8 +1,9 @@
 # The Google Cloud project ID used for this code.
 project_id = ""
-# The Google Cloud bucket name to store the terraform state. Note: Bucket name must be globally unique.
+# The Google Cloud bucket name to store the terraform state (e.g ads-policy-monitor-bucket). 
+# Note: Bucket name must be globally unique.
 # Please read https://cloud.google.com/storage/docs/buckets#naming for further name considerations.
-bucket_name = "ads-pmd-bucket"
+bucket_name = ""
 # The region where you would like to store data in BigQuery and other resources (Cloud funtion, scheduler, bucket).
 # e.g. europe-west2. Please note: Region selected needs to support Cloud Scheduler. 
 # Up to date information on region support can be found at https://cloud.google.com/about/locations
