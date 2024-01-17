@@ -1,6 +1,7 @@
-#The Google Cloud project ID used for this code.
+# The Google Cloud project ID used for this code.
 project_id = ""
-#The Google Cloud bucket name to store the terraform state.
+# The Google Cloud bucket name to store the terraform state. Note: Bucket name must be globally unique.
+# Please read https://cloud.google.com/storage/docs/buckets#naming for further name considerations.
 bucket_name = "ads-pmd-bucket"
 # The region where you would like to store data in BigQuery and other resources (Cloud funtion, scheduler, bucket).
 # e.g. europe-west2. Please note: Region selected needs to support Cloud Scheduler. 
@@ -16,7 +17,7 @@ google_ads_developer_token = ""
 google_ads_login_customer_id = ""
 # These are the Google Ads customer IDs you would like to run the tool for.
 # It is a list of IDs and should have no dashes. For example:
-#[1111111111, 2222222222]
+# [1111111111, 2222222222]
 customer_ids = []
 # This is where you would like to output the policy data to in BigQuery.
 # These resources will be created.
