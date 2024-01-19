@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """The pydantic models & constants for the project."""
-from typing import List, Optional
+from typing import List, Optional, Union
 from pydantic import BaseModel
 
 
@@ -20,8 +20,9 @@ class ReportConfig(BaseModel):
     table_name: str
     write_disposition: str
     is_builtin: bool = False
+    is_asset_report: bool = False
     builtin_query_name: Optional[str] = None
-    gaql_filename: Optional[str] = None
+    gaql_filenames: Optional[Union[str, List[str]]] = None
 
 
 class Payload(BaseModel):

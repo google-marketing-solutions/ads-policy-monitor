@@ -16,7 +16,7 @@ import logging
 import os
 import random
 import sys
-from typing import List
+from typing import List, Dict
 
 from gaarf.api_clients import GoogleAdsApiClient
 from gaarf.builtin_queries import BUILTIN_QUERIES
@@ -39,6 +39,19 @@ GOOGLE_ADS_REFRESH_TOKEN = os.environ.get('GOOGLE_ADS_REFRESH_TOKEN')
 GOOGLE_ADS_CLIENT_ID = os.environ.get('GOOGLE_ADS_CLIENT_ID')
 GOOGLE_ADS_CLIENT_SECRET = os.environ.get('GOOGLE_ADS_CLIENT_SECRET')
 GOOGLE_ADS_DEVELOPER_TOKEN = os.environ.get('GOOGLE_ADS_DEVELOPER_TOKEN')
+
+GROUP_BY_ASSET_POLICY_COLUMNS = [
+    "event_date",
+    "customer_id",
+    "customer_descriptive_name",
+    "asset_id",
+    "asset_source",
+    "asset_type",
+    "asset_policy_summary_review_status",
+    "asset_policy_summary_policy_topic_entries_topics",
+    "asset_policy_summary_approval_status",
+    "asset_level",
+]
 
 
 def get_ads_client(payload: models.Payload) -> GoogleAdsApiClient:
@@ -95,12 +108,63 @@ def run_gaarf_report(payload: models.Payload,
                                  report_fetcher=report_fetcher,
                                  customer_ids=payload.customer_ids)
 
-    path = f'gaql/{report_config.gaql_filename}'
+    if report_config.is_asset_report:
+        all_reports = []
+        for gaql_filename in report_config.gaql_filenames:
+            path = f'gaql/{gaql_filename}'
+            all_reports.append(
+                run_query_from_file(
+                    query_path=path,
+                    report_fetcher=report_fetcher,
+                    customer_ids=payload.customer_ids,
+                ))
+        return combine_assets_reports(all_reports)
+
+    path = f'gaql/{report_config.gaql_filenames}'
     return run_query_from_file(
         query_path=path,
         report_fetcher=report_fetcher,
         customer_ids=payload.customer_ids,
     )
+
+
+def combine_assets_reports(gaarf_reports: List[GaarfReport]) -> GaarfReport:
+    """Combine assets reports.
+
+    Args:
+        gaarf_reports: a list of gaarf reports.
+
+    Returns:
+        A GAARF report.
+    """
+    logger.info('Combining Assets reports')
+    combined_assets_report = pd.DataFrame()
+    for report in gaarf_reports:
+        report_df = report.to_pandas()
+
+        if report_df.empty:
+            continue
+
+        if ("ad_group_id" in report_df.keys() and
+                "campaign_id" in report_df.keys()):
+            report_df["asset_level"] = "Ad Group"
+        elif ("campaign_id" in report_df.keys()):
+            report_df["asset_level"] = "Campaign"
+        else:
+            report_df["asset_level"] = "Account"
+
+        # Convert policy_topic_entries to str (otherwise group by will fail)
+        report_df[
+            "asset_policy_summary_policy_topic_entries_topics"] = report_df[
+                "asset_policy_summary_policy_topic_entries_topics"].apply(
+                    lambda x: x if isinstance(x, str) else ' | '.join(x))
+
+        report_df = (
+            report_df.groupby(GROUP_BY_ASSET_POLICY_COLUMNS).size().reset_index(
+                name='counts'))
+        combined_assets_report = pd.concat([combined_assets_report, report_df])
+
+    return GaarfReport.from_pandas(combined_assets_report)
 
 
 def run_builtin_query(query_name: str, report_fetcher: AdsReportFetcher,
