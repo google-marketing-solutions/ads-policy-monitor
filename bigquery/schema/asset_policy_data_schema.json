@@ -20,11 +20,6 @@
       "mode": "NULLABLE"
     },
     {
-      "name": "asset_name",
-      "type": "STRING",
-      "mode": "NULLABLE"
-    },
-    {
       "name": "asset_source",
       "type": "STRING",
       "mode": "NULLABLE"
@@ -47,6 +42,16 @@
     {
       "name": "asset_policy_summary_approval_status",
       "type": "STRING",
+      "mode": "NULLABLE"
+    },
+    {
+      "name": "asset_level",
+      "type": "STRING",
+      "mode": "NULLABLE"
+    },
+    {
+      "name": "counts",
+      "type": "INTEGER",
       "mode": "NULLABLE"
     }
 ]
