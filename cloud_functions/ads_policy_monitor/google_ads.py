@@ -40,8 +40,10 @@ GOOGLE_ADS_CLIENT_ID = os.environ.get('GOOGLE_ADS_CLIENT_ID')
 GOOGLE_ADS_CLIENT_SECRET = os.environ.get('GOOGLE_ADS_CLIENT_SECRET')
 GOOGLE_ADS_DEVELOPER_TOKEN = os.environ.get('GOOGLE_ADS_DEVELOPER_TOKEN')
 
+TIME_SERIES_DATE_COLUMN = "event_date"
+
 GROUP_BY_ASSET_POLICY_COLUMNS = [
-    "event_date",
+    TIME_SERIES_DATE_COLUMN,
     "customer_id",
     "customer_descriptive_name",
     "asset_id",
@@ -165,6 +167,26 @@ def combine_assets_reports(gaarf_reports: List[GaarfReport]) -> GaarfReport:
         combined_assets_report = pd.concat([combined_assets_report, report_df])
 
     return GaarfReport.from_pandas(combined_assets_report)
+
+
+def extract_time_series(gaarf_report: GaarfReport,
+                        report_config: models.ReportConfig) -> GaarfReport:
+    """Creates time series report from a gaarf report
+
+    Args:
+        gaarf_report: a gaarf report.
+        report_config: the config of the report to run.
+
+    Returns:
+        A GAARF report.
+    """
+    logger.info('Creating time series')
+    report_df = gaarf_report.to_pandas()
+    report_df = report_df.groupby([
+        TIME_SERIES_DATE_COLUMN, report_config.time_series_variable_column
+    ]).size().reset_index(name='counts')
+
+    return GaarfReport.from_pandas(report_df)
 
 
 def run_builtin_query(query_name: str, report_fetcher: AdsReportFetcher,

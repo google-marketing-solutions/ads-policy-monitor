@@ -27,16 +27,18 @@ def write_gaarf_report_to_bigquery(
         payload: models.Payload,
         gaarf_report: GaarfReport,
         report_config: models.ReportConfig,
+        table_name: str,
         bq_writer: writer.BigQueryWriter = None) -> None:
     """Output a GAARF report to BigQuery.
 
     Args:
         payload: the configuration used in this execution.
-        gaarf_report: the report to output
+        gaarf_report: the report to output.
         report_config: the config of the report to run.
+        table_name: name of the table to write to.
         bq_writer: for dependency injection, provide a BQ writer class.
     """
-    logger.info('Writing report to BigQuery: %s', report_config.table_name)
+    logger.info('Writing report to BigQuery: %s', table_name)
     if bq_writer is None:
         bq_writer = writer.BigQueryWriter(
             project=payload.project_id,
@@ -44,4 +46,4 @@ def write_gaarf_report_to_bigquery(
             location=payload.region,
             write_disposition=report_config.write_disposition)
 
-    bq_writer.write(gaarf_report, destination=report_config.table_name)
+    bq_writer.write(gaarf_report, destination=table_name)

@@ -1,0 +1,17 @@
+[
+    {
+      "name": "event_date",
+      "type": "STRING",
+      "mode": "NULLABLE"
+    },
+    {
+      "name": "ad_group_ad_policy_summary_approval_status",
+      "type": "STRING",
+      "mode": "NULLABLE"
+    },
+    {
+      "name": "counts",
+      "type": "INTEGER",
+      "mode": "NULLABLE"
+    }
+]
