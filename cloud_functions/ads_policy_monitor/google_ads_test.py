@@ -13,6 +13,7 @@
 # limitations under the License.
 """Unit tests for google_ads.py"""
 
+
 import random
 import unittest
 from unittest.mock import MagicMock
