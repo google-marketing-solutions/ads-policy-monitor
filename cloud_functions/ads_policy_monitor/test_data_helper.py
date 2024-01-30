@@ -148,3 +148,34 @@ TEST_EXPECTED_ASSET_POLICY_REPORT = {
     ],
     'counts': [1, 2, 3, 1, 1, 1],
 }
+
+TEST_CUSTOMER_ASSET_POLICY_DATA_EMPTY = {
+    'event_date': ['2023-10-26'],
+    'customer_id': [0],
+    'customer_descriptive_name': [''],
+    'asset_id': [0],
+    'asset_source': ['UNSPECIFIED'],
+    'asset_type': ['UNSPECIFIED'],
+    'asset_policy_summary_review_status': ['UNSPECIFIED'],
+    'asset_policy_summary_policy_topic_entries_topics': [''],
+    'asset_policy_summary_approval_status': ['UNSPECIFIED']
+}
+
+TEST_EXPECTED_ASSET_POLICY_REPORT_EMPTY_CUSTOMER = {
+    'event_date': ['2023-10-26', '2023-10-26', '2023-10-26'],
+    'customer_id': [12345, 12345, 12345],
+    'customer_descriptive_name': ['Customer A', 'Customer A', 'Customer A'],
+    'asset_id': [11, 21, 22],
+    'asset_source': ['ADVERTISER', 'ADVERTISER', 'ADVERTISER'],
+    'asset_type': ['CALLOUT', 'CALLOUT', 'CALLOUT'],
+    'asset_policy_summary_review_status': ['REVIEWED', 'REVIEWED', 'REVIEWED'],
+    'asset_policy_summary_policy_topic_entries_topics': [
+        'TRADEMARKS_IN_AD_TEXT | TOBACO', 'TRADEMARKS_IN_AD_TEXT',
+        'TRADEMARKS_IN_AD_TEXT'
+    ],
+    'asset_policy_summary_approval_status': [
+        'APPROVED_LIMITED', 'APPROVED_LIMITED', 'APPROVED_LIMITED'
+    ],
+    'asset_level': ['Ad Group', 'Ad Group', 'Campaign'],
+    'counts': [1, 2, 3],
+}
