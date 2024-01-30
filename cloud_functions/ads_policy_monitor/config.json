@@ -10,13 +10,14 @@
       "table_name": "AdPolicyData",
       "write_disposition": "WRITE_APPEND",
       "is_builtin": false,
-      "gaql_filename": "ad_policy_data.sql"
+      "gaql_filenames": "ad_policy_data.sql"
     },
     {
       "table_name": "AssetPolicyData",
       "write_disposition": "WRITE_APPEND",
       "is_builtin": false,
-      "gaql_filename": "asset_policy_data.sql"
+      "is_asset_report": true,
+      "gaql_filenames": ["campaign_asset.sql", "ad_group_asset.sql", "customer_asset.sql"]
     }
   ]
 }

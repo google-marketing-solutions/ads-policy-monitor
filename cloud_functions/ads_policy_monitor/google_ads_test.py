@@ -12,9 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Unit tests for google_ads.py"""
+
 import random
 import unittest
 from unittest.mock import MagicMock, patch
+
+import pandas as pd
+from pandas.testing import assert_frame_equal
+
+from test_data_helper import TEST_AD_GROUP_ASSET_POLICY_DATA
+from test_data_helper import TEST_CAMPAIGN_ASSET_POLICY_DATA
+from test_data_helper import TEST_CUSTOMER_ASSET_POLICY_DATA
+from test_data_helper import TEST_EXPECTED_ASSET_POLICY_REPORT
+from test_data_helper import TEST_CUSTOMER_ASSET_POLICY_DATA_EMPTY
+from test_data_helper import TEST_EXPECTED_ASSET_POLICY_REPORT_EMPTY_CUSTOMER
+from gaarf.report import GaarfReport
+
 import google_ads
 import models
 
@@ -80,6 +93,52 @@ class GoogleAdsTestCase(unittest.TestCase):
     def test_get_google_ads_synthetic_data_missing(self):
         with self.assertRaises(FileNotFoundError):
             google_ads.get_google_ads_synthetic_data('MissingData')
+
+    def test_combine_assets_reports(self):
+        adgroup_gaarf_report = GaarfReport.from_pandas(
+            pd.DataFrame(TEST_AD_GROUP_ASSET_POLICY_DATA))
+        campaign_gaarf_report = GaarfReport.from_pandas(
+            pd.DataFrame(TEST_CAMPAIGN_ASSET_POLICY_DATA))
+        customer_gaarf_report = GaarfReport.from_pandas(
+            pd.DataFrame(TEST_CUSTOMER_ASSET_POLICY_DATA))
+
+        report = google_ads.combine_assets_reports([
+            adgroup_gaarf_report, campaign_gaarf_report, customer_gaarf_report
+        ])
+
+        results = report.to_pandas()
+        expected_results = pd.DataFrame(TEST_EXPECTED_ASSET_POLICY_REPORT)
+        assert_frame_equal(results, expected_results)
+
+    def test_combine_assets_reports_empty_customer(self):
+        adgroup_gaarf_report = GaarfReport.from_pandas(
+            pd.DataFrame(TEST_AD_GROUP_ASSET_POLICY_DATA))
+        campaign_gaarf_report = GaarfReport.from_pandas(
+            pd.DataFrame(TEST_CAMPAIGN_ASSET_POLICY_DATA))
+        customer_gaarf_report = GaarfReport.from_pandas(
+            pd.DataFrame(TEST_CUSTOMER_ASSET_POLICY_DATA_EMPTY))
+
+        report = google_ads.combine_assets_reports([
+            adgroup_gaarf_report, campaign_gaarf_report, customer_gaarf_report
+        ])
+
+        results = report.to_pandas()
+        expected_results = pd.DataFrame(
+            TEST_EXPECTED_ASSET_POLICY_REPORT_EMPTY_CUSTOMER)
+        assert_frame_equal(results, expected_results)
+
+    def test_combine_assets_reports_empty(self):
+        adgroup_gaarf_report = GaarfReport.from_pandas(pd.DataFrame())
+        campaign_gaarf_report = GaarfReport.from_pandas(pd.DataFrame())
+        customer_gaarf_report = GaarfReport.from_pandas(pd.DataFrame())
+
+        report = google_ads.combine_assets_reports([
+            adgroup_gaarf_report, campaign_gaarf_report, customer_gaarf_report
+        ])
+
+        results = report.to_pandas()
+        expected_results = GaarfReport.from_pandas(pd.DataFrame()).to_pandas()
+        assert_frame_equal(results, expected_results)
 
 
 if __name__ == '__main__':
