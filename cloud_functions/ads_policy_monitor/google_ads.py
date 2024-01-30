@@ -144,7 +144,8 @@ def combine_assets_reports(gaarf_reports: List[GaarfReport]) -> GaarfReport:
     for report in gaarf_reports:
         report_df = report.to_pandas()
 
-        if report_df.empty:
+        # If no results in the report, then skip
+        if report_df.empty or report_df["customer_id"][0] == 0:
             continue
 
         if ("ad_group_id" in report_df.keys() and
