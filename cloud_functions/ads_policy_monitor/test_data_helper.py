@@ -38,14 +38,19 @@ TEST_AD_GROUP_ASSET_POLICY_DATA = {
 }
 
 TEST_CAMPAIGN_ASSET_POLICY_DATA = {
-    'event_date': ['2023-10-26', '2023-10-26', '2023-10-26'],
-    'customer_id': [12345, 12345, 12345],
-    'customer_descriptive_name': ['Customer A', 'Customer A', 'Customer A'],
-    'asset_id': [22, 22, 22],
-    'asset_source': ['ADVERTISER', 'ADVERTISER', 'ADVERTISER'],
-    'asset_type': ['CALLOUT', 'CALLOUT', 'CALLOUT'],
-    'asset_policy_summary_review_status': ['REVIEWED', 'REVIEWED', 'REVIEWED'],
+    'event_date': ['2023-10-26', '2023-10-26', '2023-10-26', '2023-10-27'],
+    'customer_id': [12345, 12345, 12345, 12345],
+    'customer_descriptive_name': [
+        'Customer A', 'Customer A', 'Customer A', 'Customer A'
+    ],
+    'asset_id': [22, 22, 22, 22],
+    'asset_source': ['ADVERTISER', 'ADVERTISER', 'ADVERTISER', 'ADVERTISER'],
+    'asset_type': ['CALLOUT', 'CALLOUT', 'CALLOUT', 'CALLOUT'],
+    'asset_policy_summary_review_status': [
+        'REVIEWED', 'REVIEWED', 'REVIEWED', 'REVIEWED'
+    ],
     'asset_policy_summary_policy_topic_entries_topics': [
+        'TRADEMARKS_IN_AD_TEXT',
         'TRADEMARKS_IN_AD_TEXT',
         'TRADEMARKS_IN_AD_TEXT',
         'TRADEMARKS_IN_AD_TEXT',
@@ -54,9 +59,10 @@ TEST_CAMPAIGN_ASSET_POLICY_DATA = {
         'APPROVED_LIMITED',
         'APPROVED_LIMITED',
         'APPROVED_LIMITED',
+        'APPROVED_LIMITED',
     ],
-    'campaign_id': [1, 2, 3],
-    'campaign_status': ['ENABLED', 'ENABLED', 'ENABLED'],
+    'campaign_id': [1, 2, 3, 3],
+    'campaign_status': ['ENABLED', 'ENABLED', 'ENABLED', 'ENABLED'],
 }
 
 TEST_CUSTOMER_ASSET_POLICY_DATA = {
@@ -84,11 +90,12 @@ TEST_EXPECTED_ASSET_POLICY_REPORT = {
         '2023-10-26',
         '2023-10-26',
         '2023-10-26',
+        '2023-10-27',
         '2023-10-26',
         '2023-10-26',
         '2023-10-26',
     ],
-    'customer_id': [12345, 12345, 12345, 12345, 12345, 12345],
+    'customer_id': [12345, 12345, 12345, 12345, 12345, 12345, 12345],
     'customer_descriptive_name': [
         'Customer A',
         'Customer A',
@@ -96,9 +103,11 @@ TEST_EXPECTED_ASSET_POLICY_REPORT = {
         'Customer A',
         'Customer A',
         'Customer A',
+        'Customer A',
     ],
-    'asset_id': [11, 21, 22, 13, 23, 33],
+    'asset_id': [11, 21, 22, 22, 13, 23, 33],
     'asset_source': [
+        'ADVERTISER',
         'ADVERTISER',
         'ADVERTISER',
         'ADVERTISER',
@@ -113,8 +122,10 @@ TEST_EXPECTED_ASSET_POLICY_REPORT = {
         'CALLOUT',
         'CALLOUT',
         'CALLOUT',
+        'CALLOUT',
     ],
     'asset_policy_summary_review_status': [
+        'REVIEWED',
         'REVIEWED',
         'REVIEWED',
         'REVIEWED',
@@ -129,8 +140,10 @@ TEST_EXPECTED_ASSET_POLICY_REPORT = {
         'TRADEMARKS_IN_AD_TEXT',
         'TRADEMARKS_IN_AD_TEXT',
         'TRADEMARKS_IN_AD_TEXT',
+        'TRADEMARKS_IN_AD_TEXT',
     ],
     'asset_policy_summary_approval_status': [
+        'APPROVED_LIMITED',
         'APPROVED_LIMITED',
         'APPROVED_LIMITED',
         'APPROVED_LIMITED',
@@ -142,11 +155,12 @@ TEST_EXPECTED_ASSET_POLICY_REPORT = {
         'Ad Group',
         'Ad Group',
         'Campaign',
+        'Campaign',
         'Account',
         'Account',
         'Account',
     ],
-    'counts': [1, 2, 3, 1, 1, 1],
+    'counts': [1, 2, 3, 1, 1, 1, 1],
 }
 
 TEST_CUSTOMER_ASSET_POLICY_DATA_EMPTY = {
@@ -162,20 +176,33 @@ TEST_CUSTOMER_ASSET_POLICY_DATA_EMPTY = {
 }
 
 TEST_EXPECTED_ASSET_POLICY_REPORT_EMPTY_CUSTOMER = {
-    'event_date': ['2023-10-26', '2023-10-26', '2023-10-26'],
-    'customer_id': [12345, 12345, 12345],
-    'customer_descriptive_name': ['Customer A', 'Customer A', 'Customer A'],
-    'asset_id': [11, 21, 22],
-    'asset_source': ['ADVERTISER', 'ADVERTISER', 'ADVERTISER'],
-    'asset_type': ['CALLOUT', 'CALLOUT', 'CALLOUT'],
-    'asset_policy_summary_review_status': ['REVIEWED', 'REVIEWED', 'REVIEWED'],
+    'event_date': ['2023-10-26', '2023-10-26', '2023-10-26', '2023-10-27'],
+    'customer_id': [12345, 12345, 12345, 12345],
+    'customer_descriptive_name': [
+        'Customer A', 'Customer A', 'Customer A', 'Customer A'
+    ],
+    'asset_id': [11, 21, 22, 22],
+    'asset_source': ['ADVERTISER', 'ADVERTISER', 'ADVERTISER', 'ADVERTISER'],
+    'asset_type': ['CALLOUT', 'CALLOUT', 'CALLOUT', 'CALLOUT'],
+    'asset_policy_summary_review_status': [
+        'REVIEWED', 'REVIEWED', 'REVIEWED', 'REVIEWED'
+    ],
     'asset_policy_summary_policy_topic_entries_topics': [
         'TRADEMARKS_IN_AD_TEXT | TOBACO', 'TRADEMARKS_IN_AD_TEXT',
-        'TRADEMARKS_IN_AD_TEXT'
+        'TRADEMARKS_IN_AD_TEXT', 'TRADEMARKS_IN_AD_TEXT'
     ],
     'asset_policy_summary_approval_status': [
-        'APPROVED_LIMITED', 'APPROVED_LIMITED', 'APPROVED_LIMITED'
+        'APPROVED_LIMITED', 'APPROVED_LIMITED', 'APPROVED_LIMITED',
+        'APPROVED_LIMITED'
     ],
-    'asset_level': ['Ad Group', 'Ad Group', 'Campaign'],
-    'counts': [1, 2, 3],
+    'asset_level': ['Ad Group', 'Ad Group', 'Campaign', 'Campaign'],
+    'counts': [1, 2, 3, 1],
+}
+
+TEST_EXPECTED_TIME_SERIES = {
+    'event_date': ['2023-10-26', '2023-10-27'],
+    'asset_policy_summary_approval_status': [
+        'APPROVED_LIMITED', 'APPROVED_LIMITED'
+    ],
+    'counts': [3, 1]
 }

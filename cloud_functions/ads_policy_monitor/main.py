@@ -133,7 +133,16 @@ def run(payload: models.Payload) -> None:
             logger.warning('GAARF report is None, check configuration.')
             return None
         bigquery.write_gaarf_report_to_bigquery(payload, gaarf_report,
-                                                report_config)
+                                                report_config,
+                                                report_config.table_name)
+
+        if report_config.time_series_table_name:
+            report_time_series = google_ads.extract_time_series(
+                gaarf_report, report_config)
+            bigquery.write_gaarf_report_to_bigquery(
+                payload, report_time_series, report_config,
+                report_config.time_series_table_name)
+
     logger.info('Done.')
 
 

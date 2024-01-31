@@ -26,6 +26,7 @@ from test_data_helper import TEST_CUSTOMER_ASSET_POLICY_DATA
 from test_data_helper import TEST_EXPECTED_ASSET_POLICY_REPORT
 from test_data_helper import TEST_CUSTOMER_ASSET_POLICY_DATA_EMPTY
 from test_data_helper import TEST_EXPECTED_ASSET_POLICY_REPORT_EMPTY_CUSTOMER
+from test_data_helper import TEST_EXPECTED_TIME_SERIES
 from gaarf.report import GaarfReport
 
 import google_ads
@@ -138,6 +139,19 @@ class GoogleAdsTestCase(unittest.TestCase):
 
         results = report.to_pandas()
         expected_results = GaarfReport.from_pandas(pd.DataFrame()).to_pandas()
+        assert_frame_equal(results, expected_results)
+
+    def test_extract_time_series(self):
+        mock_report_config = MagicMock()
+        mock_report_config.time_series_variable_column = 'asset_policy_summary_approval_status'
+        assets_report = GaarfReport.from_pandas(
+            pd.DataFrame(TEST_CAMPAIGN_ASSET_POLICY_DATA))
+
+        timeseries = google_ads.extract_time_series(assets_report,
+                                                    mock_report_config)
+
+        results = timeseries.to_pandas()
+        expected_results = pd.DataFrame(TEST_EXPECTED_TIME_SERIES)
         assert_frame_equal(results, expected_results)
 
 
