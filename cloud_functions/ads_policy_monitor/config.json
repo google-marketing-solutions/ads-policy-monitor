@@ -8,12 +8,16 @@
     },
     {
       "table_name": "AdPolicyData",
+      "time_series_table_name": "AdPolicyDataTimeSeries",
+      "time_series_variable_column": "ad_group_ad_policy_summary_approval_status",
       "write_disposition": "WRITE_APPEND",
       "is_builtin": false,
       "gaql_filenames": "ad_policy_data.sql"
     },
     {
       "table_name": "AssetPolicyData",
+      "time_series_table_name": "AssetPolicyDataTimeSeries",
+      "time_series_variable_column": "asset_policy_summary_approval_status",
       "write_disposition": "WRITE_APPEND",
       "is_builtin": false,
       "is_asset_report": true,

@@ -51,6 +51,14 @@ resource "google_bigquery_table" "ad_policy_data_table" {
   }
 }
 
+resource "google_bigquery_table" "ad_policy_time_series_table" {
+  dataset_id          = google_bigquery_dataset.dataset.dataset_id
+  table_id            = "AdPolicyTimeSeries"
+  deletion_protection = false
+  schema              = file("../bigquery/schema/ad_policy_time_series_schema.json")
+  labels              = local.labels
+}
+
 resource "google_bigquery_table" "asset_policy_data_table" {
   dataset_id          = google_bigquery_dataset.dataset.dataset_id
   table_id            = "AssetPolicyData"
@@ -61,6 +69,14 @@ resource "google_bigquery_table" "asset_policy_data_table" {
     type          = "DAY"
     expiration_ms = 86400000 * var.bq_expiration_days
   }
+}
+
+resource "google_bigquery_table" "asset_policy_time_series_table" {
+  dataset_id          = google_bigquery_dataset.dataset.dataset_id
+  table_id            = "AssetPolicyTimeSeries"
+  deletion_protection = false
+  schema              = file("../bigquery/schema/asset_policy_time_series_schema.json")
+  labels              = local.labels
 }
 
 resource "google_bigquery_table" "ocid_table" {
