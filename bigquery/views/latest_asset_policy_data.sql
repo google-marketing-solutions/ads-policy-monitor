@@ -18,8 +18,10 @@ SELECT
   Ocid.ocid,
   STRUCT(
     CONCAT("https://ads.google.com/aw/overview?ocid=", Ocid.ocid) AS home,
-    CONCAT("https://ads.google.com/aw/assetreport/associations/", REPLACE(LOWER(AssetPolicyData.asset_type),'_',''),
-    "?ocid=", Ocid.ocid
+    CONCAT("https://ads.google.com/aw/assetreport/associations/allupgraded",
+    "?ocid=", Ocid.ocid,
+    COALESCE("&campaignId=" || AssetPolicyData.example_campaign_id, ''),
+    COALESCE("&adGroupId=" || AssetPolicyData.example_ad_group_id, '')
     ) AS assets
    ) AS gads_links,
   AssetPolicyData.*,
