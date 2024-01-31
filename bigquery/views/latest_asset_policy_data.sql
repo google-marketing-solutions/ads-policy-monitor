@@ -20,8 +20,8 @@ SELECT
     CONCAT("https://ads.google.com/aw/overview?ocid=", Ocid.ocid) AS home,
     CONCAT("https://ads.google.com/aw/assetreport/associations/allupgraded",
     "?ocid=", Ocid.ocid,
-    COALESCE("&campaignId=" || AssetPolicyData.example_campaign_id, ''),
-    COALESCE("&adGroupId=" || AssetPolicyData.example_ad_group_id, '')
+    IF(AssetPolicyData.example_campaign_id is Null, "", "&campaignId=" || AssetPolicyData.example_campaign_id),
+    IF(AssetPolicyData.example_ad_group_id is Null, "", "&adGroupId=" || AssetPolicyData.example_ad_group_id)
     ) AS assets
    ) AS gads_links,
   AssetPolicyData.*,
