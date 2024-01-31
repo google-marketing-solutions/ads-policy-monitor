@@ -213,7 +213,7 @@ def get_google_ads_synthetic_data(table_name: str) -> GaarfReport:
     """Read in the synthetic data based on the table name of the report."""
     logger.info('Fetching synthetic data for: %s', table_name)
     df = pd.read_csv(f'synthetic_data/{table_name}.csv')
-    if table_name == 'AdPolicyData':
+    if table_name in ['AdPolicyData', 'AssetPolicyData']:
         df['event_date'] = utils.get_current_date()
         # Randomly drop a small subset of rows to add some variance to the time
         # series.
