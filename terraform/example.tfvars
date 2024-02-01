@@ -24,7 +24,7 @@ customer_ids = []
 # These resources will be created.
 bq_output_dataset = ""
 # How long should you store the historical data in BigQuery partitions in days?
-bq_expiration_days = 90
+bq_expiration_days = 3
 # Set this to true if you want to deploy the demo dashboard with synthetic data,
 # otherwise set false. If this is false it will pull data from Google Ads.
 use_synthetic_data = false

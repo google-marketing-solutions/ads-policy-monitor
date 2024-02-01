@@ -160,7 +160,9 @@ TEST_EXPECTED_ASSET_POLICY_REPORT = {
         'Account',
         'Account',
     ],
-    'counts': [1, 2, 3, 1, 1, 1, 1],
+    'example_campaign_id': [1, 1, 1, 3, None, None, None],
+    'example_ad_group_id': [1, 2, None, None, None, None, None],
+    'counts': [1, 2, 3, 1, 1, 1, 1]
 }
 
 TEST_CUSTOMER_ASSET_POLICY_DATA_EMPTY = {
@@ -196,7 +198,9 @@ TEST_EXPECTED_ASSET_POLICY_REPORT_EMPTY_CUSTOMER = {
         'APPROVED_LIMITED'
     ],
     'asset_level': ['Ad Group', 'Ad Group', 'Campaign', 'Campaign'],
-    'counts': [1, 2, 3, 1],
+    'example_campaign_id': [1, 1, 1, 3],
+    'example_ad_group_id': [1, 2, None, None],
+    'counts': [1, 2, 3, 1]
 }
 
 TEST_EXPECTED_TIME_SERIES = {

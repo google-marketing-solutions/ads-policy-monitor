@@ -50,6 +50,16 @@
       "mode": "NULLABLE"
     },
     {
+      "name": "example_campaign_id",
+      "type": "INTEGER",
+      "mode": "NULLABLE"
+    },
+    {
+      "name": "example_ad_group_id",
+      "type": "INTEGER",
+      "mode": "NULLABLE"
+    },
+    {
       "name": "counts",
       "type": "INTEGER",
       "mode": "NULLABLE"

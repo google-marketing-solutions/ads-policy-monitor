@@ -153,8 +153,11 @@ def combine_assets_reports(gaarf_reports: List[GaarfReport]) -> GaarfReport:
             report_df["asset_level"] = "Ad Group"
         elif ("campaign_id" in report_df.keys()):
             report_df["asset_level"] = "Campaign"
+            report_df["ad_group_id"] = None
         else:
             report_df["asset_level"] = "Account"
+            report_df["ad_group_id"] = None
+            report_df["campaign_id"] = None
 
         # Convert policy_topic_entries to str (otherwise group by will fail)
         report_df[
@@ -162,9 +165,12 @@ def combine_assets_reports(gaarf_reports: List[GaarfReport]) -> GaarfReport:
                 "asset_policy_summary_policy_topic_entries_topics"].apply(
                     lambda x: x if isinstance(x, str) else ' | '.join(x))
 
-        report_df = (
-            report_df.groupby(GROUP_BY_ASSET_POLICY_COLUMNS).size().reset_index(
-                name='counts'))
+        # Get number of times the asset is used per level, and example IDs it is used at
+        report_df = report_df.groupby(GROUP_BY_ASSET_POLICY_COLUMNS).agg(
+            example_campaign_id=('campaign_id', 'first'),
+            example_ad_group_id=('ad_group_id', 'first'),
+            counts=('asset_id', 'count')).reset_index()
+
         combined_assets_report = pd.concat([combined_assets_report, report_df])
 
     return GaarfReport.from_pandas(combined_assets_report)
