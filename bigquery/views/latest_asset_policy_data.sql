@@ -26,7 +26,7 @@ SELECT
    ) AS gads_links,
   AssetPolicyData.*,
   SPLIT(
-    AssetPolicyData.asset_policy_summary_policy_topic_entries_topics,
+    REPLACE(AssetPolicyData.asset_policy_summary_policy_topic_entries_topics, ' ', ''),
     "|") AS asset_policy_topics,
 FROM
   `${BQ_DATASET}.AssetPolicyData` AS AssetPolicyData
@@ -36,3 +36,4 @@ LEFT JOIN
   ) AS Ocid ON Ocid.account_id = AssetPolicyData.customer_id
 WHERE
   EXTRACT(DATE FROM _PARTITIONTIME) = CURRENT_DATE()
+  AND Date(event_date) = CURRENT_DATE()

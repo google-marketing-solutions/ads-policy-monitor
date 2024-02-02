@@ -25,7 +25,7 @@ SELECT
    ) AS gads_links,
   AdPolicyData.*,
   SPLIT(
-    AdPolicyData.ad_group_ad_policy_summary_policy_topic_entries,
+    REPLACE(AdPolicyData.ad_group_ad_policy_summary_policy_topic_entries, ' ', ''),
     "|") AS ad_policy_topics,
 FROM
   `${BQ_DATASET}.AdPolicyData` AS AdPolicyData
@@ -35,3 +35,4 @@ LEFT JOIN
   ) AS Ocid ON Ocid.account_id = AdPolicyData.customer_id
 WHERE
   EXTRACT(DATE FROM _PARTITIONTIME) = CURRENT_DATE()
+  AND Date(event_date) = CURRENT_DATE()
