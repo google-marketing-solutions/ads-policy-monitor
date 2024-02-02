@@ -3,7 +3,8 @@
 _Providing a 1-stop-shop, centralized view of all your Google Ads policy
 reports._
 
-Ads Policy Monitor provides a data pipeline for pulling ad and asset approval data from Google Ads, enabling you to monitor trends and spikes with policy approvals.
+Ads Policy Monitor provides a data pipeline for pulling ad and asset approval data 
+from Google Ads, enabling you to monitor trends and spikes with policy approvals.
 
 ## Solution Overview
 
@@ -17,7 +18,8 @@ when automation is used to create ad copy, as it's easy to introduce mistakes
 that result in ads being disapproved, for example, the incorrect use of
 capitalisation.
 
-This solution pulls a daily snapshot of your ad and asset policy approvals, stores them in BigQuery, and provides a Looker Studio dashboard template to monitor this.
+This solution pulls a daily snapshot of your ad and asset policy approvals, stores 
+them in BigQuery, and provides a Looker Studio dashboard template to monitor this.
 
 When disapprovals happen you can take action by following the deeplink into
 Google Ads to get more information and take action.
