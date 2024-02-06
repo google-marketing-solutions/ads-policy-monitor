@@ -71,7 +71,7 @@ if [[ "$yn" == "n"  || "$yn" == "N" ]]; then
 fi
 
 echo "Creating a Cloud Storage Bucket $BUCKET_NAME in region $REGION..."
-gcloud storage buckets create "gs://$BUCKET_NAME" --location=$REGION
+gsutil -q ls "gs://$BUCKET_NAME" > /dev/null 2>&1 || gsutil -q mb -l $REGION "gs://$BUCKET_NAME"
 
 if [ $? -eq 0 ]; then
   echo "Enabling required APIs..."
@@ -91,7 +91,6 @@ if [ $? -eq 0 ]; then
   terraform init -backend-config="bucket=$BUCKET_NAME"
   terraform apply --var-file example.tfvars && {
       echo -e "\e[32mTerraform apply was successful.\e[0m"
-
       echo "If you wish to use the Looker templated provided, click the link below to set up your dashboard:"
       echo -e "\e[36m$TEMPLATE_LINK\e[0m"
       echo -e "\nPlease note: You need to be part of the readers group as detailed on deployment requirements: https://groups.google.com/g/ads-policy-monitor-template-readers"
