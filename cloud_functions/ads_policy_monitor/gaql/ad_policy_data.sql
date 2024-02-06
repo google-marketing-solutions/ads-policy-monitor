@@ -37,4 +37,5 @@ WHERE
   AND campaign.primary_status != 'ENDED'
   AND ad_group.status = 'ENABLED'
   AND ad_group_ad.status != 'REMOVED'
+  AND ad_group_ad.policy_summary.approval_status != 'APPROVED'
   AND segments.date DURING LAST_30_DAYS
