@@ -33,7 +33,7 @@ logging.basicConfig(stream=sys.stdout)
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-GOOGLE_ADS_API_VERSION = 'v14'
+GOOGLE_ADS_API_VERSION = 'v16'
 
 GOOGLE_ADS_REFRESH_TOKEN = os.environ.get('GOOGLE_ADS_REFRESH_TOKEN')
 GOOGLE_ADS_CLIENT_ID = os.environ.get('GOOGLE_ADS_CLIENT_ID')
