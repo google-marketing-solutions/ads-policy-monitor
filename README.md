@@ -148,7 +148,7 @@ You can make the Cloud Scheduler run more often than once a day, however you'd n
 The reason this solution was designed to run once a day was based on learnings from hundreds of deployments, where the tradeoff between solution costs and Policy Reviews turn-around time was taken into consideration.
 
 If youy still wish to make the refresh rate higher, these are some of the adjustments you'd have to perform:
-1. Introduce time into the `[event_date](https://github.com/google-marketing-solutions/ads-policy-monitor/blob/main/cloud_functions/ads_policy_monitor/gaql/ad_policy_data.sql#L15)` parameter of the queries.
+1. Introduce time into the [`event_date`](https://github.com/google-marketing-solutions/ads-policy-monitor/blob/main/cloud_functions/ads_policy_monitor/gaql/ad_policy_data.sql#L15) parameter of the queries.
 2. Update the [cron schedule](https://github.com/google-marketing-solutions/ads-policy-monitor/blob/main/terraform/main.tf#L264) to run more frequently.
 3. Update the [partitioning on the BigQuery table](https://github.com/google-marketing-solutions/ads-policy-monitor/blob/main/terraform/main.tf#L48) to hourly.
 4. Update the [latestadpolicy data query](https://github.com/google-marketing-solutions/ads-policy-monitor/blob/main/bigquery/views/latest_ad_policy_data.sql#L37) to filter on only the latest data.
