@@ -115,8 +115,45 @@ group as stated in the Requirements section.
 
 Please note, the solution is scheduled to run at midnight each day. We recommend
 waiting for the next day to see the data populated in the dashboard.
-Alternatively you can force run the job in Cloud Scheduler, however this can
-create duplicated data.
+Alternatively you can force run the job in Cloud Scheduler. However this can
+create duplicated data if you run more than once a day.
+![Force run Cloud Scheduler screenshot](./docs/images/force-run-cloud-scheduler.png)
+
+## FAQ
+
+### Which Google Cloud APIs will be enabled to my project?
+
+- Big Query API `bigquery.googleapis.com`
+- Cloud Build `cloudbuild.googleapis.com`
+- Cloud Funtions `cloudfunctions.googleapis.com`
+- Cloud Resource Manager API `cloudresourcemanager.googleapis.com`
+- Google Ads API `googleads.googleapis.com`
+- Identity and Access Management (IAM) `iam.googleapis.com`
+- Secret Manager `secretmanager.googleapis.com`
+- Cloud Run `run.googleapis.com`
+- Cloud Scheduler `cloudscheduler.googleapis.com`
+
+You can also check this on the deployment file [ads-policy-monitor/init.sh](https://github.com/google-marketing-solutions/ads-policy-monitor/blob/main/init.sh#L78-L87).
+
+### Which GAQL queries are executed?
+Please refer to the folder google_ads_queries [cloud_functions/ads_policy_monitor/gaql](https://github.com/google-marketing-solutions/ads-policy-monitor/tree/main/cloud_functions/ads_policy_monitor/gaql).
+
+
+### Can I deploy it in an existing Cloud Project or do I need to create a new one just for this solution?
+You can use an existing Project if you want to. However, please remember that the best practice for clients is to create a new project dedicated to this solution (or any new solution).
+
+### Can this solution refresh the data more often than once a day?
+You can make the Cloud Scheduler run more often than once a day, however you'd need to also make some customization in the code as the code and templates provided here would show duplicated records.
+
+The reason this solution was designed to run once a day was based on learnings from hundreds of deployments, where the tradeoff between solution costs and Policy Reviews turn-around time was taken into consideration.
+
+If youy still wish to make the refresh rate higher, these are some of the adjustments you'd have to perform:
+1. Introduce time into the `[event_date](https://github.com/google-marketing-solutions/ads-policy-monitor/blob/main/cloud_functions/ads_policy_monitor/gaql/ad_policy_data.sql#L15)` parameter of the queries.
+2. Update the [cron schedule](https://github.com/google-marketing-solutions/ads-policy-monitor/blob/main/terraform/main.tf#L264) to run more frequently.
+3. Update the [partitioning on the BigQuery table](https://github.com/google-marketing-solutions/ads-policy-monitor/blob/main/terraform/main.tf#L48) to hourly.
+4. Update the [latestadpolicy data query](https://github.com/google-marketing-solutions/ads-policy-monitor/blob/main/bigquery/views/latest_ad_policy_data.sql#L37) to filter on only the latest data.
+5. Refresh your Looker Studio dashboard data source to mke sure the `event_date` is now a datetime and instead of just date.
+
 
 ## Contributing
 
