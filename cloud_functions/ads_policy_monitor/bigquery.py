@@ -23,12 +23,11 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 
-def write_gaarf_report_to_bigquery(
-        payload: models.Payload,
-        gaarf_report: GaarfReport,
-        report_config: models.ReportConfig,
-        table_name: str,
-        bq_writer: BigQueryWriter = None) -> None:
+def write_gaarf_report_to_bigquery(payload: models.Payload,
+                                   gaarf_report: GaarfReport,
+                                   report_config: models.ReportConfig,
+                                   table_name: str,
+                                   bq_writer: BigQueryWriter = None) -> None:
     """Output a GAARF report to BigQuery.
 
     Args:
