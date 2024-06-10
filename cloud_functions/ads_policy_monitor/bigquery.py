@@ -15,7 +15,7 @@
 import logging
 import sys
 from gaarf.report import GaarfReport
-from gaarf.io import writer
+from gaarf.io.writers.bigquery_writer import BigQueryWriter
 import models
 
 logging.basicConfig(stream=sys.stdout)
@@ -23,12 +23,11 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 
-def write_gaarf_report_to_bigquery(
-        payload: models.Payload,
-        gaarf_report: GaarfReport,
-        report_config: models.ReportConfig,
-        table_name: str,
-        bq_writer: writer.BigQueryWriter = None) -> None:
+def write_gaarf_report_to_bigquery(payload: models.Payload,
+                                   gaarf_report: GaarfReport,
+                                   report_config: models.ReportConfig,
+                                   table_name: str,
+                                   bq_writer: BigQueryWriter = None) -> None:
     """Output a GAARF report to BigQuery.
 
     Args:
@@ -40,7 +39,7 @@ def write_gaarf_report_to_bigquery(
     """
     logger.info('Writing report to BigQuery: %s', table_name)
     if bq_writer is None:
-        bq_writer = writer.BigQueryWriter(
+        bq_writer = BigQueryWriter(
             project=payload.project_id,
             dataset=payload.bq_output_dataset,
             location=payload.region,
