@@ -30,6 +30,26 @@ resource "google_project_iam_member" "secret_accessor_role" {
   member  = "serviceAccount:${google_service_account.service_account.email}"
 }
 
+# COMPUTE SERVICE ACCOUNT --------------------------------------------------------------
+data "google_project" "project" {
+  project_id = var.project_id
+}
+resource "google_project_iam_member" "storage_object_viewer_role" {
+  project = var.project_id
+  role    = "roles/storage.objectViewer"
+  member  = "serviceAccount:${data.google_project.project.number}-compute@developer.gserviceaccount.com"
+}
+resource "google_project_iam_member" "logs_writer_role" {
+  project = var.project_id
+  role    = "roles/logging.logWriter"
+  member  = "serviceAccount:${data.google_project.project.number}-compute@developer.gserviceaccount.com"
+}
+resource "google_project_iam_member" "artifact_registry_administrator_role" {
+  project = var.project_id
+  role    = "roles/artifactregistry.admin"
+  member  = "serviceAccount:${data.google_project.project.number}-compute@developer.gserviceaccount.com"
+}
+
 # BIGQUERY ---------------------------------------------------------------------
 resource "google_bigquery_dataset" "dataset" {
   dataset_id                  = var.bq_output_dataset
