@@ -1,4 +1,4 @@
-#!/bin/bash
+vim #!/bin/bash
 #
 # Copyright 2023 Google LLC
 #
@@ -91,7 +91,7 @@ if [ $? -eq 0 ]; then
   terraform init -backend-config="bucket=$BUCKET_NAME"
   terraform apply --var-file example.tfvars && {
       echo -e "\e[32mTerraform apply was successful.\e[0m"
-      echo "If you wish to use the Looker templated provided, click the link below to set up your dashboard:"
+      echo "If you wish to use the Looker templated provided, click the link below to set up your dashboard (make sure the complete link is selected, as the parameters mapping are required - alternatively you can copy the full link and paste on your browser):"
       echo -e "\e[36m$TEMPLATE_LINK\e[0m"
       echo -e "\nPlease note: You need to be part of the readers group as detailed on deployment requirements: https://groups.google.com/g/ads-policy-monitor-template-readers"
   } || {
