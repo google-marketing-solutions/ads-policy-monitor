@@ -1,0 +1,38 @@
+{
+  "use_current_project": true,
+  "name": "policy",
+  "gcs_bucket": "",
+  "service_account": "",
+  "path_to_ads_queries": "google_ads_queries",
+  "path_to_bq_queries": "bq_queries",
+  "custom_ids_query_path": "get-accounts.sql",
+  "path_to_googleads_config": "google-ads.yaml",
+  "cf_memory": "2048MB",
+  "deploy_scripts": true,
+  "deploy_wf": true,
+  "output_dataset": "policy_ads",
+  "ads_macro": {
+    "start_date": ":YYYYMMDD-90",
+    "end_date": ":YYYYMMDD-1",
+    "today": ":YYYYMMDD",
+    "yesterday": ":YYYYMMDD-1"
+  },
+  "bq_macro": {
+    "bq_dataset": "policy_ads"
+  },
+  "schedule_wf": true,
+  "schedule_time": "09:00",
+  "run_job": false,
+  "run_wf": true,
+  "clone_dashboard": true,
+  "dashboard_id": "ef1f136c-e008-403a-83db-1f0fd5a152bf",
+  "dashboard_name": "Ads Policy Monitor",
+  "dashboard_dataset": "policy_ads_bq",
+  "dashboard_datasources": {
+    "LatestAssetPolicyData": "latest_asset_policy_data",
+    "LatestAdPolicyData": "latest_ad_policy_data",
+    "AdPolicyDataTimeSeries": "ad_snapshots_*",
+    "NoApprovedAdsAdGroup": "no_approved_ads_ad_group",
+    "AssetPolicyDataTimeSeries": "asset_snapshots_*"
+  }
+}
