@@ -27,25 +27,25 @@ When disapprovals happen you can take action by following the deeplink into
 Google Ads to get more information and take action.
 
 In the dashboard you can instantly monitor the overall status of your accounts:
-![Dashboard overview](./docs/images/looker-studio-overview.png)
+![Dashboard overview](../docs/images/looker-studio-overview.png)
 
 And how this changes over time. This allows you to identify any changes in the
 trend, to investigate further.
-![Dashboard time series](./docs/images/looker-studio-time-series.png)
+![Dashboard time series](../docs/images/looker-studio-time-series.png)
 
 You can drilldown into the disapprovals to try to get more information about why
 this has happened:
-![Dashboard disapprovals](./docs/images/looker-studio-disapprovals.png)
+![Dashboard disapprovals](../docs/images/looker-studio-disapprovals.png)
 
 You're also able to see insights like when an ad group has no approved ads:
-![Dashboard no approved ads](./docs/images/looker-studio-no-approved-ads.png)
+![Dashboard no approved ads](../docs/images/looker-studio-no-approved-ads.png)
 
 And analyze asset disapprovals:
-![Dashboard assets](./docs/images/looker-studio-assets.png)
+![Dashboard assets](../docs/images/looker-studio-assets.png)
 
 ## How does it work?
 
-![Architecture diagram](./docs/images/architecture-diagram.png)
+![Architecture diagram](../docs/images/architecture-diagram.png)
 
 1.  A daily cron job runs that makes a HTTPS request to trigger the
     `ads_policy_monitor` Cloud Function.
