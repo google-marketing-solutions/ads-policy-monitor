@@ -136,7 +136,7 @@ def run(payload: models.Payload) -> None:
                                                 report_config,
                                                 report_config.table_name)
 
-        if report_config.time_series_table_name:
+        if report_config.time_series_table_name and len(gaarf_report.results) > 0:
             report_time_series = google_ads.extract_time_series(
                 gaarf_report, report_config)
             bigquery.write_gaarf_report_to_bigquery(
