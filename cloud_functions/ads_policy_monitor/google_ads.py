@@ -173,6 +173,9 @@ def combine_assets_reports(gaarf_reports: List[GaarfReport]) -> GaarfReport:
 
         combined_assets_report = pd.concat([combined_assets_report, report_df])
 
+    combined_assets_report['example_campaign_id'] = combined_assets_report['example_campaign_id'].fillna(0)
+    combined_assets_report['example_ad_group_id'] = combined_assets_report['example_ad_group_id'].fillna(0)
+
     return GaarfReport.from_pandas(combined_assets_report)
 
 
