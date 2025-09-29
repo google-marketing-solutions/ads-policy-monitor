@@ -11,6 +11,7 @@ locals {
 
 # SERVICE ACCOUNT --------------------------------------------------------------
 resource "google_service_account" "service_account" {
+  project = var.project_id
   account_id   = "ads-policy-monitor"
   display_name = "Service Account for running Ads Policy Monitor"
 }
@@ -224,6 +225,12 @@ resource "google_cloudfunctions2_function" "fetch_ads_policy_monitor_function" {
   name                  = "ads_policy_monitor"
   description           = "Fetches policy approval data from running Google Ads campaigns."
   labels                = local.labels
+  depends_on            = [
+    google_secret_manager_secret_version.oauth_refresh_token_secret_version,
+    google_secret_manager_secret_version.client_id_secret_version,
+    google_secret_manager_secret_version.client_secret_secret_version,
+    google_secret_manager_secret_version.developer_token_secret_version,
+  ]
 
   build_config {
     runtime     = "python311"
@@ -301,6 +308,7 @@ resource "google_cloud_scheduler_job" "ads_policy_daily_scheduler" {
 
 # SECRET MANAGER ---------------------------------------------------------------
 resource "google_secret_manager_secret" "oauth_refresh_token_secret" {
+  project   = var.project_id
   secret_id = "ads-policy-monitor-oauth-refresh-token-secret"
   labels    = local.labels
   replication {
@@ -308,6 +316,7 @@ resource "google_secret_manager_secret" "oauth_refresh_token_secret" {
   }
 }
 resource "google_secret_manager_secret" "client_id_secret" {
+  project   = var.project_id
   secret_id = "ads-policy-monitor-client-id-secret"
   labels    = local.labels
   replication {
@@ -315,6 +324,7 @@ resource "google_secret_manager_secret" "client_id_secret" {
   }
 }
 resource "google_secret_manager_secret" "client_secret_secret" {
+  project   = var.project_id
   secret_id = "ads-policy-monitor-client-secret-secret"
   labels    = local.labels
   replication {
@@ -322,6 +332,7 @@ resource "google_secret_manager_secret" "client_secret_secret" {
   }
 }
 resource "google_secret_manager_secret" "developer_token_secret" {
+  project   = var.project_id
   secret_id = "ads-policy-monitor-developer-token-secret"
   labels    = local.labels
   replication {
