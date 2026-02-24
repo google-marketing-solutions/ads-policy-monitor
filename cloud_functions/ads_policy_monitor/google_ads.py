@@ -21,7 +21,7 @@ from typing import List, Dict
 from gaarf.api_clients import GoogleAdsApiClient
 from gaarf.builtin_queries import BUILTIN_QUERIES
 from gaarf.io import reader
-from gaarf.query_executor import AdsReportFetcher
+from gaarf.report_fetcher import AdsReportFetcher
 from gaarf.report import GaarfReport
 import numpy as np
 import pandas as pd
@@ -33,7 +33,7 @@ logging.basicConfig(stream=sys.stdout)
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-GOOGLE_ADS_API_VERSION = 'v19'
+GOOGLE_ADS_API_VERSION = 'v23'
 
 GOOGLE_ADS_REFRESH_TOKEN = os.environ.get('GOOGLE_ADS_REFRESH_TOKEN')
 GOOGLE_ADS_CLIENT_ID = os.environ.get('GOOGLE_ADS_CLIENT_ID')
