@@ -71,7 +71,7 @@ if [[ "$yn" == "n"  || "$yn" == "N" ]]; then
 fi
 
 echo "Creating a Cloud Storage Bucket $BUCKET_NAME in region $REGION..."
-gsutil -q ls "gs://$BUCKET_NAME" > /dev/null 2>&1 || gsutil -q mb -l $REGION "gs://$BUCKET_NAME"
+gcloud storage ls "gs://$BUCKET_NAME" > /dev/null 2>&1 || gcloud storage buckets create "gs://$BUCKET_NAME" --location $REGION
 
 if [ $? -eq 0 ]; then
   echo "Enabling required APIs..."
