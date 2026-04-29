@@ -71,6 +71,25 @@ And analyze asset disapprovals:
         please join this group
         [ads-policy-monitor-template-readers](https://groups.google.com/g/ads-policy-monitor-template-readers).
 
+## IAM Requirements
+
+To deploy this solution, the user or service account performing the deployment requires specific permissions in the Google Cloud Project.
+
+### Recommended
+* **Owner**: To prevent permission errors during deployment, it is explicitly recommended to have the **Project Owner** role (`roles/owner`). This ensures that all APIs can be enabled, resources created, and IAM bindings applied without issues.
+
+### Granular Roles (Optional)
+If you prefer to use granular roles instead of Owner, you will need at least the following roles:
+* **Service Usage Admin** (`roles/serviceusage.serviceUsageAdmin`): Required by `init.sh` to enable Google Cloud APIs.
+* **Storage Admin** (`roles/storage.admin`): Required to create the Terraform state bucket and the function source bucket.
+* **Service Account Admin** (`roles/iam.serviceAccountAdmin`): Required to create the solution's service account.
+* **Project IAM Admin** (`roles/resourcemanager.projectIamAdmin`): Required to assign roles to the service account.
+* **BigQuery Admin** (`roles/bigquery.admin`): Required to create datasets and tables.
+* **Cloud Functions Admin** (`roles/cloudfunctions.admin`): Required to deploy the Cloud Function.
+* **Cloud Run Admin** (`roles/run.admin`): Required as Cloud Functions (2nd gen) are backed by Cloud Run.
+* **Cloud Scheduler Admin** (`roles/cloudscheduler.admin`): Required to create the daily cron job.
+* **Secret Manager Admin** (`roles/secretmanager.admin`): Required to store the Google Ads API credentials securely.
+
 ## Deployment
 
 1.  Open the Google Cloud Project in the UI.
