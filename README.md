@@ -97,7 +97,7 @@ If you prefer to use granular roles instead of Owner, you will need at least the
     [OAuth Consent Screen](https://console.cloud.google.com/apis/credentials/consent)
     and create a new internal app.
 3.  Open the
-    <a href="https://pantheon.corp.google.com/apis/credentials" target="_blank">API Credentials Screen</a>
+    <a href="https://console.cloud.google.com/apis/credentials" target="_blank">API Credentials Screen</a>
     -> Create credentials -> OAuth Client ID -> Web app -> Set
     `https://developers.google.com/oauthplayground` as an authorised redirect
     URI. Make a note of the `client_id` and the `client_secret`.
