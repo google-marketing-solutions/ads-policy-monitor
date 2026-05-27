@@ -97,17 +97,14 @@ If you prefer to use granular roles instead of Owner, you will need at least the
     [OAuth Consent Screen](https://console.cloud.google.com/apis/credentials/consent)
     and create a new internal app.
 3.  Open the
-    [API Credentials Screen](https://console.cloud.google.com/apis/credentials)
+    <a href="https://pantheon.corp.google.com/apis/credentials" target="_blank">API Credentials Screen</a>
     -> Create credentials -> OAuth Client ID -> Web app -> Set
     `https://developers.google.com/oauthplayground` as an authorised redirect
     URI. Make a note of the `client_id` and the `client_secret`.
-4.  Following
-    [OAuth Playground - Generate tokens instructions](https://developers.google.com/google-ads/api/docs/oauth/playground#generate_tokens)
-    generate a refresh token for the following scopes, using the `client_id` and
-    `client_secret` generated in the previous step:
-    ```
-    https://www.googleapis.com/auth/adwords
-    ```
+4.  Open the
+    <a href="https://developers.google.com/oauthplayground/#step1&scopes=https%3A//www.googleapis.com/auth/adwords&url=https%3A//&content_type=application/json&http_method=GET&useDefaultOauthCred=checked&oauthEndpointSelect=Google&oauthAuthEndpointValue=https%3A//accounts.google.com/o/oauth2/v2/auth&oauthTokenEndpointValue=https%3A//oauth2.googleapis.com/token&includeCredentials=unchecked&accessTokenType=bearer&autoRefreshToken=unchecked&accessType=offline&forceAprovalPrompt=checked&response_type=code" target="_blank">OAuth Playground</a>
+    to generate a refresh token for the Adwords scope, using the `client_id` and
+    `client_secret` generated in the previous step. Please refer to <a href="https://youtu.be/KFICa7Ngzng?si=06HnIrM9il5KAX62&t=439" target="_blank">this video</a> for a demo of how to generate the refresh token.
 5.  Open Cloud Shell
 6.  Clone the repo & open the directory with the code: 
     ```
