@@ -129,8 +129,8 @@ def run(payload: models.Payload) -> None:
     for report in reports_to_run:
         report_config = report_configs[report]
         gaarf_report = google_ads.run_gaarf_report(payload, report_config)
-        if gaarf_report is None:
-            logger.warning('GAARF report is None, check configuration.')
+        if not gaarf_report:
+            logger.warning(f'GAARF report ({report_config.table_name}) is empty, check configuration.')
             return None
         bigquery.write_gaarf_report_to_bigquery(payload, gaarf_report,
                                                 report_config,

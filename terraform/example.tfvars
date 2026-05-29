@@ -1,11 +1,11 @@
 # The Google Cloud project ID used for this code.
 project_id = ""
-# The Google Cloud bucket name to store the terraform state (e.g ads-policy-monitor-bucket). 
+# The Google Cloud bucket name to store the terraform state (e.g ads-policy-monitor-bucket).
 # Note: Bucket name must be globally unique.
 # Please read https://cloud.google.com/storage/docs/buckets#naming for further name considerations.
 bucket_name = ""
 # The region where you would like to store data in BigQuery and other resources (Cloud funtion, scheduler, bucket).
-# e.g. europe-west2. Please note: Region selected needs to support Cloud Scheduler. 
+# e.g. europe-west2. Please note: Region selected needs to support Cloud Scheduler.
 # Up to date information on region support can be found at https://cloud.google.com/about/locations
 region = ""
 # These next variables are for pulling data from Google Ads. Read:
@@ -23,7 +23,9 @@ customer_ids = []
 # This is where you would like to output the policy data to in BigQuery.
 # These resources will be created.
 bq_output_dataset = ""
-# How long should you store the historical data in BigQuery partitions in days?
+# The number of days to keep historical data in BigQuery table partitions.
+# This affects how far back you can see (and filter) policy status changes
+# in your dashboard.
 bq_expiration_days = 3
 # Set this to true if you want to deploy the demo dashboard with synthetic data,
 # otherwise set false. If this is false it will pull data from Google Ads.
