@@ -171,6 +171,24 @@ If youy still wish to make the refresh rate higher, these are some of the adjust
 5. Refresh your Looker Studio dashboard data source to mke sure the `event_date` is now a datetime and instead of just date.
 
 
+## Usage telemetry
+
+To help Google understand how this solution is used, the Cloud Function sends a
+usage event to Google after each successful run, using
+[Tadau](https://github.com/google-marketing-solutions/tadau). One event is sent
+per Google Ads customer ID in the `customer_ids` configuration, and contains:
+
+- the name of the solution (`Ads Policy Monitor`),
+- the Google Ads customer ID,
+- a random ID for the event.
+
+No policy, ad, asset or campaign data is sent, and nothing is sent when running
+with synthetic data. A failure to send telemetry never affects the run.
+
+To turn this off, set `disable_telemetry = true` in your `.tfvars` file and
+redeploy. This sets the `ADS_POLICY_MONITOR_DISABLE_TELEMETRY=true` environment
+variable on the Cloud Function, which you can also set when running locally.
+
 ## Contributing
 
 ### Code formatting

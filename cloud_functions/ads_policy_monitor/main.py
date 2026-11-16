@@ -30,6 +30,7 @@ import jsonschema
 import bigquery
 import google_ads
 import models
+import telemetry
 import utils
 
 logging.basicConfig(stream=sys.stdout)
@@ -144,6 +145,7 @@ def run(payload: models.Payload) -> None:
                 payload, report_time_series, report_config,
                 report_config.time_series_table_name)
 
+    telemetry.send_usage_events(payload)
     logger.info('Done.')
 
 

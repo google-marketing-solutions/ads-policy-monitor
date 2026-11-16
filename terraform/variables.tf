@@ -61,6 +61,12 @@ variable "use_synthetic_data" {
   default     = false
 }
 
+variable "disable_telemetry" {
+  type        = bool
+  description = "Set true to stop sending usage telemetry to Google."
+  default     = false
+}
+
 variable "label_keys" {
   type        = list(string)
   description = "A list of label keys to apply to the deployed infrastructure."

@@ -3,3 +3,4 @@ google-ads-api-report-fetcher[bq]==1.18.3
 numpy==1.26.1
 jsonschema==4.19.1
 pydantic==2.4.2
+tadau==1.0.8
