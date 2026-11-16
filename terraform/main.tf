@@ -240,6 +240,10 @@ resource "google_cloudfunctions2_function" "fetch_ads_policy_monitor_function" {
     timeout_seconds       = 3600
     service_account_email = google_service_account.service_account.email
 
+    environment_variables = {
+      ADS_POLICY_MONITOR_DISABLE_TELEMETRY = tostring(var.disable_telemetry)
+    }
+
     secret_environment_variables {
       project_id = var.project_id
       key        = "GOOGLE_ADS_REFRESH_TOKEN"
